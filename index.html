@@ -4197,18 +4197,31 @@ function openDocumentInNewTab(url, name = '') {
   tab.document.write('<!DOCTYPE html><title>Chargement...</title><p style="font-family:Segoe UI,Arial,sans-serif;padding:16px;">Chargement du document...</p>');
   tab.document.close();
 
+  let finished = false;
+  const fallbackTimeout = setTimeout(() => {
+    if (finished || tab.closed) return;
+    finished = true;
+    tab.location.replace(absoluteUrl);
+  }, 1800);
+
   fetch(absoluteUrl)
     .then(res => {
       if (!res.ok) throw new Error('Erreur réseau');
       return res.blob();
     })
     .then(blob => {
+      if (finished || tab.closed) return;
+      finished = true;
+      clearTimeout(fallbackTimeout);
       const blobUrl = URL.createObjectURL(blob);
-      tab.location.href = blobUrl;
+      tab.location.replace(blobUrl);
       setTimeout(() => URL.revokeObjectURL(blobUrl), 20000);
     })
     .catch(() => {
-      tab.location.href = absoluteUrl;
+      if (finished || tab.closed) return;
+      finished = true;
+      clearTimeout(fallbackTimeout);
+      tab.location.replace(absoluteUrl);
     });
 }
 
