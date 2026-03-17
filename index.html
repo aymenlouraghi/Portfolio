@@ -3826,83 +3826,83 @@ const scolariteData = {
       children: [
         {
           id: 'a12-assistance-windows',
-          name: 'ASSISTANCE WINDOWS.odt',
+          name: 'ASSISTANCE WINDOWS.pdf',
           icon: '📝',
           type: 'file',
-          fileUrl: 'docs/scolarite/ASSISTANCE WINDOWS.odt',
-          meta: ['Type : OpenDocument (.odt)', 'Contexte : Scolarité'],
+          fileUrl: 'docs/scolarite/ASSISTANCE WINDOWS.pdf',
+          meta: ['Type : PDF (.pdf)', 'Contexte : Scolarité'],
           desc: 'Document de support et assistance Windows.',
-          tags: ['Windows', 'Assistance', 'ODT']
+          tags: ['Windows', 'Assistance', 'PDF']
         },
         {
           id: 'a12-tp-dhcp',
-          name: 'TP DHCP.odt',
+          name: 'TP DHCP.pdf',
           icon: '📝',
           type: 'file',
-          fileUrl: 'docs/scolarite/TP DHCP.odt',
-          meta: ['Type : OpenDocument (.odt)', 'Contexte : Scolarité'],
+          fileUrl: 'docs/scolarite/TP DHCP.pdf',
+          meta: ['Type : PDF (.pdf)', 'Contexte : Scolarité'],
           desc: 'TP de configuration DHCP.',
-          tags: ['DHCP', 'Réseau', 'ODT']
+          tags: ['DHCP', 'Réseau', 'PDF']
         },
         {
           id: 'a12-tp-fog',
-          name: 'TP FOG.odt',
+          name: 'TP FOG.pdf',
           icon: '📝',
           type: 'file',
-          fileUrl: 'docs/scolarite/TP FOG.odt',
-          meta: ['Type : OpenDocument (.odt)', 'Contexte : Scolarité'],
+          fileUrl: 'docs/scolarite/TP FOG.pdf',
+          meta: ['Type : PDF (.pdf)', 'Contexte : Scolarité'],
           desc: 'TP autour de FOG (déploiement/clonage).',
-          tags: ['FOG', 'Déploiement', 'ODT']
+          tags: ['FOG', 'Déploiement', 'PDF']
         },
         {
           id: 'a12-tp-glpi',
-          name: 'TP GLPI.odt',
+          name: 'TP GLPI.pdf',
           icon: '📝',
           type: 'file',
-          fileUrl: 'docs/scolarite/TP GLPI.odt',
-          meta: ['Type : OpenDocument (.odt)', 'Contexte : Scolarité'],
+          fileUrl: 'docs/scolarite/TP GLPI.pdf',
+          meta: ['Type : PDF (.pdf)', 'Contexte : Scolarité'],
           desc: 'TP de mise en place et utilisation de GLPI.',
-          tags: ['GLPI', 'Support', 'ODT']
+          tags: ['GLPI', 'Support', 'PDF']
         },
         {
           id: 'a12-tp-lamp',
-          name: 'TP LAMP.odt',
+          name: 'TP LAMP.pdf',
           icon: '📝',
           type: 'file',
-          fileUrl: 'docs/scolarite/TP LAMP.odt',
-          meta: ['Type : OpenDocument (.odt)', 'Contexte : Scolarité'],
+          fileUrl: 'docs/scolarite/TP LAMP.pdf',
+          meta: ['Type : PDF (.pdf)', 'Contexte : Scolarité'],
           desc: 'TP de déploiement d\'une stack LAMP.',
           tags: ['Linux', 'Apache', 'MySQL', 'PHP']
         },
         {
           id: 'a12-tp-snort',
-          name: 'TP SNORT.odt',
+          name: 'TP SNORT.pdf',
           icon: '📝',
           type: 'file',
-          fileUrl: 'docs/scolarite/TP SNORT.odt',
-          meta: ['Type : OpenDocument (.odt)', 'Contexte : Scolarité'],
+          fileUrl: 'docs/scolarite/TP SNORT.pdf',
+          meta: ['Type : PDF (.pdf)', 'Contexte : Scolarité'],
           desc: 'TP de détection et sécurité avec Snort.',
-          tags: ['Snort', 'Cybersécurité', 'ODT']
+          tags: ['Snort', 'Cybersécurité', 'PDF']
         },
         {
           id: 'a12-tp-supervision',
-          name: 'TP Supervision.odt',
+          name: 'TP Supervision.pdf',
           icon: '📝',
           type: 'file',
-          fileUrl: 'docs/scolarite/TP Supervision.odt',
-          meta: ['Type : OpenDocument (.odt)', 'Contexte : Scolarité'],
+          fileUrl: 'docs/scolarite/TP Supervision.pdf',
+          meta: ['Type : PDF (.pdf)', 'Contexte : Scolarité'],
           desc: 'TP de supervision de services et équipements.',
-          tags: ['Supervision', 'Monitoring', 'ODT']
+          tags: ['Supervision', 'Monitoring', 'PDF']
         },
         {
           id: 'a12-windows-server',
-          name: 'Windows Server.odt',
+          name: 'Windows Server.pdf',
           icon: '📝',
           type: 'file',
-          fileUrl: 'docs/scolarite/Windows Server.odt',
-          meta: ['Type : OpenDocument (.odt)', 'Contexte : Scolarité'],
+          fileUrl: 'docs/scolarite/Windows Server.pdf',
+          meta: ['Type : PDF (.pdf)', 'Contexte : Scolarité'],
           desc: 'Travaux sur Windows Server.',
-          tags: ['Windows Server', 'Système', 'ODT']
+          tags: ['Windows Server', 'Système', 'PDF']
         }
       ]
     }
@@ -4189,15 +4189,7 @@ function openDocumentInNewTab(url, name = '') {
     absoluteUrl = url;
   }
 
-  const sourceName = (name || url || '').toLowerCase();
-  const ext = (sourceName.split('.').pop() || '').split('?')[0];
-  const isWordLike = ['odt', 'doc', 'docx'].includes(ext);
-
-  const targetUrl = isWordLike
-    ? `https://docs.google.com/gview?embedded=1&url=${encodeURIComponent(absoluteUrl)}`
-    : absoluteUrl;
-
-  const tab = window.open(targetUrl, '_blank');
+  const tab = window.open(absoluteUrl, '_blank');
   if (!tab) {
     showNotification('⚠️ Pop-up bloquée', 'Autorise les pop-ups pour ouvrir le document dans un nouvel onglet.');
   }
