@@ -4181,7 +4181,13 @@ function openDocumentViewer(fileItem) {
 }
 
 function openDocumentInNewTab(url, name = '') {
-  const absoluteUrl = new URL(url, window.location.href).href;
+  let absoluteUrl;
+  try {
+    absoluteUrl = new URL(url, window.location.href).href;
+  } catch {
+    window.open(url, '_blank');
+    return;
+  }
   const ext = (name.split('.').pop() || '').toLowerCase();
   const isOdt = ext === 'odt';
   const isOfficeLike = ['odt', 'doc', 'docx'].includes(ext);
@@ -4211,16 +4217,22 @@ function openDocumentInNewTab(url, name = '') {
   if (isOdt) {
     const tab = window.open('', '_blank');
     if (!tab) {
-      showNotification('⚠️ Pop-up bloquée', 'Autorisez les pop-ups pour ouvrir le document dans un nouvel onglet.');
+      // Fallback: tentative d'ouverture directe si le blank tab est bloqué.
+      window.open(absoluteUrl, '_blank');
       return;
     }
 
-    tab.document.title = name || 'Prévisualisation ODT';
-    tab.document.body.innerHTML = '<p style="font-family:Arial,sans-serif;padding:16px;">Chargement du document...</p>';
+    tab.document.open();
+    tab.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Chargement...</title></head><body><p style="font-family:Arial,sans-serif;padding:16px;">Chargement du document...</p></body></html>');
+    tab.document.close();
 
     renderOdtInTab(absoluteUrl, name || 'Document', tab)
       .catch(() => {
-        tab.location.href = absoluteUrl;
+        try {
+          tab.location.href = absoluteUrl;
+        } catch {
+          window.open(absoluteUrl, '_blank');
+        }
       });
     return;
   }
@@ -4328,28 +4340,32 @@ async function renderOdtInTab(fileUrl, fileName, tab) {
     ? `${preview.textHtml}${preview.imageHtml}`
     : '<p style="color:#666;">Aucun contenu texte ou image lisible trouvé dans ce document.</p>';
 
-  tab.document.title = fileName;
-  tab.document.documentElement.innerHTML = `
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>${escapeHtml(fileName)}</title>
-      <style>
-        body { margin: 0; padding: 24px; font-family: Segoe UI, Arial, sans-serif; background: #f3f4f6; color: #111827; }
-        .wrap { max-width: 980px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 22px; }
-        h1 { font-size: 18px; margin: 0 0 14px 0; color: #111827; }
-        .content p { margin: 0 0 10px 0; line-height: 1.6; }
-        .odt-preview-figure { margin: 0 0 12px 0; }
-        .odt-preview-figure img { max-width: 100%; height: auto; border: 1px solid #e5e7eb; border-radius: 6px; }
-      </style>
-    </head>
-    <body>
-      <div class="wrap">
-        <h1>${escapeHtml(fileName)}</h1>
-        <div class="content">${contentHtml}</div>
-      </div>
-    </body>
-  `;
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${escapeHtml(fileName)}</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: Segoe UI, Arial, sans-serif; background: #f3f4f6; color: #111827; }
+    .wrap { max-width: 980px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 22px; }
+    h1 { font-size: 18px; margin: 0 0 14px 0; color: #111827; }
+    .content p { margin: 0 0 10px 0; line-height: 1.6; }
+    .odt-preview-figure { margin: 0 0 12px 0; }
+    .odt-preview-figure img { max-width: 100%; height: auto; border: 1px solid #e5e7eb; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>${escapeHtml(fileName)}</h1>
+    <div class="content">${contentHtml}</div>
+  </div>
+</body>
+</html>`;
+
+  tab.document.open();
+  tab.document.write(html);
+  tab.document.close();
 }
 
 async function renderOdtPreview(fileUrl, containerId) {
