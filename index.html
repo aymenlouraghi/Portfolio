@@ -4779,9 +4779,6 @@ function onScolariteItemClick(evt, itemId) {
       }
     }
 
-    if (item.fileUrl) {
-      openDocumentViewer(item);
-    }
   }
 }
 
@@ -4796,6 +4793,8 @@ function onScolariteItemDblClick(itemId) {
     const chevron = document.getElementById('chevron-' + itemId);
     if (childrenEl) childrenEl.classList.add('open');
     if (chevron) chevron.classList.add('open');
+  } else if (item.type === 'file' && item.fileUrl) {
+    openDocumentViewer(item);
   }
 }
 
