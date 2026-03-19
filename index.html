@@ -397,6 +397,127 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   padding: 0 6px;
   font-size:0.85rem;
 }
+.tray-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.tray-btn:hover,
+.tray-btn.active {
+  background: rgba(255,255,255,0.08);
+}
+
+.taskbar-flyout {
+  position: fixed;
+  bottom: calc(var(--taskbar-h) + 8px);
+  min-width: 250px;
+  max-width: min(320px, calc(100vw - 16px));
+  background: var(--bg-taskbar);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(28px);
+  z-index: 9600;
+  padding: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px) scale(0.98);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.taskbar-flyout.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+.flyout-title {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  letter-spacing: 0.3px;
+}
+.volume-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.volume-slider {
+  flex: 1;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+.volume-percent {
+  font-size: 0.76rem;
+  color: var(--text);
+  min-width: 38px;
+  text-align: right;
+}
+.flyout-btn {
+  margin-top: 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.74rem;
+  font-family: var(--font);
+}
+.flyout-btn:hover { background: rgba(255,255,255,0.1); }
+
+.network-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.network-item {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+  padding: 8px 10px;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.network-item:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: var(--border);
+}
+.network-item.connected {
+  border-color: rgba(0,230,118,0.4);
+  background: rgba(0,230,118,0.1);
+}
+.network-status {
+  margin-top: 8px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.clock-big {
+  font-size: 1.4rem;
+  color: var(--text-bright);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.clock-long-date,
+.clock-zone {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
 
 #resetLayoutBtn {
   position: fixed;
@@ -3198,14 +3319,37 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   </div>
   <div class="taskbar-right">
     <div class="taskbar-tray">
-      <span>📶</span>
-      <span>🔊</span>
+      <button class="tray-btn" id="networkBtn" title="Réseau">📶</button>
+      <button class="tray-btn" id="soundBtn" title="Son">🔊</button>
     </div>
     <div class="taskbar-clock" id="taskbarClock">
       <span class="taskbar-time" id="taskbarTime">00:00</span>
       <span class="taskbar-date-small" id="taskbarDate">01/01</span>
     </div>
   </div>
+</div>
+
+<div class="taskbar-flyout" id="networkFlyout" aria-live="polite">
+  <div class="flyout-title">Réseaux disponibles</div>
+  <div class="network-list" id="networkList"></div>
+  <div class="network-status" id="networkStatus">Aucun réseau connecté</div>
+</div>
+
+<div class="taskbar-flyout" id="soundFlyout" aria-live="polite">
+  <div class="flyout-title">Volume système</div>
+  <div class="volume-row">
+    <span id="soundFlyoutIcon">🔊</span>
+    <input id="volumeSlider" class="volume-slider" type="range" min="0" max="100" step="1" value="72">
+    <span class="volume-percent" id="volumePercent">72%</span>
+  </div>
+  <button class="flyout-btn" id="muteToggleBtn" type="button">Muet</button>
+</div>
+
+<div class="taskbar-flyout" id="clockFlyout" aria-live="polite">
+  <div class="flyout-title">Date et heure</div>
+  <div class="clock-big" id="clockFlyoutTime">00:00:00</div>
+  <div class="clock-long-date" id="clockFlyoutDate">Chargement...</div>
+  <div class="clock-zone" id="clockFlyoutZone">Fuseau horaire local</div>
 </div>
 
 <button id="resetLayoutBtn" ondblclick="resetPortfolioDefaultsAndReload()" title="Double-clic pour reset affichage">↺</button>
@@ -3408,6 +3552,10 @@ const state = {
   startMenuOpen: false,
   selfDestructActive: false,
   aproposDrafts: {},
+  volume: 72,
+  muted: false,
+  connectedNetwork: null,
+  openFlyout: null,
   terminalHistory: [],
   terminalHistoryIndex: -1,
   notifTimer: null,
@@ -3587,14 +3735,195 @@ function updateClocks() {
   const lockDate = document.getElementById('lockDate');
   const taskbarTime = document.getElementById('taskbarTime');
   const taskbarDate = document.getElementById('taskbarDate');
+  const clockFlyoutTime = document.getElementById('clockFlyoutTime');
+  const clockFlyoutDate = document.getElementById('clockFlyoutDate');
+  const clockFlyoutZone = document.getElementById('clockFlyoutZone');
 
   if (lockTime) lockTime.textContent = timeStr;
   if (lockDate) lockDate.textContent = dateStr;
   if (taskbarTime) taskbarTime.textContent = timeStr;
   if (taskbarDate) taskbarDate.textContent = shortDate;
+  if (clockFlyoutTime) clockFlyoutTime.textContent = now.toLocaleTimeString('fr-FR');
+  if (clockFlyoutDate) clockFlyoutDate.textContent = now.toLocaleDateString('fr-FR', options);
+  if (clockFlyoutZone) {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Fuseau local';
+    clockFlyoutZone.textContent = tz;
+  }
 }
 updateClocks();
 setInterval(updateClocks, 1000);
+
+// ============================
+// TASKBAR QUICK SETTINGS
+// ============================
+const FAKE_NETWORKS = [
+  { name: 'Aymen', strength: 'Excellent' },
+  { name: 'momo', strength: 'Bon' },
+  { name: 'Charmilles-WiFi', strength: 'Moyen' },
+  { name: 'Konvergence-Guest', strength: 'Faible' },
+];
+
+function closeAllFlyouts() {
+  ['networkFlyout', 'soundFlyout', 'clockFlyout'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('open');
+  });
+  ['networkBtn', 'soundBtn', 'taskbarClock'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+  state.openFlyout = null;
+}
+
+function positionFlyout(flyout, anchor) {
+  if (!flyout || !anchor) return;
+  const anchorRect = anchor.getBoundingClientRect();
+  const flyoutW = Math.min(Math.max(flyout.offsetWidth || 280, 250), window.innerWidth - 16);
+  const left = Math.min(Math.max(8, anchorRect.right - flyoutW), window.innerWidth - flyoutW - 8);
+  flyout.style.left = `${left}px`;
+}
+
+function toggleFlyout(type, anchorEl) {
+  const map = {
+    network: 'networkFlyout',
+    sound: 'soundFlyout',
+    clock: 'clockFlyout'
+  };
+  const targetId = map[type];
+  const target = document.getElementById(targetId);
+  if (!target || !anchorEl) return;
+
+  if (state.openFlyout === type) {
+    closeAllFlyouts();
+    return;
+  }
+
+  closeAllFlyouts();
+  target.classList.add('open');
+  anchorEl.classList.add('active');
+  positionFlyout(target, anchorEl);
+  state.openFlyout = type;
+}
+
+function updateSoundUI() {
+  const soundBtn = document.getElementById('soundBtn');
+  const soundFlyoutIcon = document.getElementById('soundFlyoutIcon');
+  const volumePercent = document.getElementById('volumePercent');
+  const muteToggleBtn = document.getElementById('muteToggleBtn');
+  const slider = document.getElementById('volumeSlider');
+  if (!soundBtn || !soundFlyoutIcon || !volumePercent || !muteToggleBtn || !slider) return;
+
+  const icon = state.muted || state.volume === 0
+    ? '🔇'
+    : state.volume < 40
+      ? '🔉'
+      : '🔊';
+  soundBtn.textContent = icon;
+  soundFlyoutIcon.textContent = icon;
+  volumePercent.textContent = `${state.volume}%`;
+  slider.value = String(state.volume);
+  muteToggleBtn.textContent = state.muted ? 'Réactiver le son' : 'Muet';
+}
+
+function renderNetworkList() {
+  const list = document.getElementById('networkList');
+  const status = document.getElementById('networkStatus');
+  if (!list || !status) return;
+
+  list.innerHTML = FAKE_NETWORKS.map(net => {
+    const isConnected = state.connectedNetwork === net.name;
+    return `
+      <button type="button" class="network-item ${isConnected ? 'connected' : ''}" data-network="${net.name}">
+        <span>📶 ${net.name}</span>
+        <span>${isConnected ? 'Connecté' : net.strength}</span>
+      </button>
+    `;
+  }).join('');
+
+  if (state.connectedNetwork) {
+    status.textContent = `Connecté à ${state.connectedNetwork}`;
+  } else {
+    status.textContent = 'Aucun réseau connecté';
+  }
+
+  const networkBtn = document.getElementById('networkBtn');
+  if (networkBtn) networkBtn.textContent = state.connectedNetwork ? '📶' : '📡';
+
+  list.querySelectorAll('.network-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.connectedNetwork = btn.dataset.network || null;
+      renderNetworkList();
+      if (state.connectedNetwork) {
+        showNotification('📶 Réseau', `Connecté à ${state.connectedNetwork}`);
+      }
+    });
+  });
+}
+
+function initTaskbarQuickSettings() {
+  const networkBtn = document.getElementById('networkBtn');
+  const soundBtn = document.getElementById('soundBtn');
+  const clockBtn = document.getElementById('taskbarClock');
+  const volumeSlider = document.getElementById('volumeSlider');
+  const muteToggleBtn = document.getElementById('muteToggleBtn');
+
+  if (networkBtn) {
+    networkBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      toggleFlyout('network', networkBtn);
+    });
+  }
+  if (soundBtn) {
+    soundBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      toggleFlyout('sound', soundBtn);
+    });
+  }
+  if (clockBtn) {
+    clockBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      toggleFlyout('clock', clockBtn);
+    });
+  }
+
+  if (volumeSlider) {
+    volumeSlider.addEventListener('input', () => {
+      state.volume = Number(volumeSlider.value);
+      if (state.volume > 0) state.muted = false;
+      updateSoundUI();
+    });
+  }
+
+  if (muteToggleBtn) {
+    muteToggleBtn.addEventListener('click', () => {
+      state.muted = !state.muted;
+      updateSoundUI();
+    });
+  }
+
+  ['networkFlyout', 'soundFlyout', 'clockFlyout'].forEach(id => {
+    const flyout = document.getElementById(id);
+    if (!flyout) return;
+    flyout.addEventListener('click', e => e.stopPropagation());
+  });
+
+  document.addEventListener('click', () => closeAllFlyouts());
+  window.addEventListener('resize', () => {
+    if (!state.openFlyout) return;
+    const flyoutMap = {
+      network: ['networkFlyout', 'networkBtn'],
+      sound: ['soundFlyout', 'soundBtn'],
+      clock: ['clockFlyout', 'taskbarClock']
+    };
+    const [flyoutId, anchorId] = flyoutMap[state.openFlyout] || [];
+    const flyout = document.getElementById(flyoutId);
+    const anchor = document.getElementById(anchorId);
+    if (flyout && anchor) positionFlyout(flyout, anchor);
+  });
+
+  renderNetworkList();
+  updateSoundUI();
+}
 
 // ============================
 // LOCK SCREEN
@@ -6544,6 +6873,7 @@ document.addEventListener('keydown', e => {
 loadWallpaper();
 loadAccentColor();
 loadSentEmails();
+initTaskbarQuickSettings();
 
 </script>
 </body>
