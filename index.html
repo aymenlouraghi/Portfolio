@@ -1180,8 +1180,10 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   background: linear-gradient(180deg, rgba(9, 17, 36, 0.9) 0%, rgba(7, 13, 28, 0.95) 100%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 12px 28px rgba(0,0,0,0.34);
   overflow: hidden;
-  display: grid;
-  grid-template-columns: 180px 1fr;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 8px;
 }
 .mission-board-root::before {
   content: '';
@@ -1192,65 +1194,81 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
     linear-gradient(180deg, rgba(135, 223, 255, 0.08), transparent 30%),
     repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 20px);
 }
+.mission-board-lobby {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 42px 1fr 42px;
+  gap: 8px;
+  align-items: stretch;
+}
 .mission-board-menu {
   position: relative;
   z-index: 1;
-  padding: 12px 10px;
-  border-right: 1px solid rgba(152, 211, 255, 0.2);
-  background: linear-gradient(180deg, rgba(12, 25, 48, 0.92), rgba(8, 16, 31, 0.96));
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 .mission-board-option {
   width: 100%;
-  border: 1px solid rgba(156, 225, 255, 0.22);
+  border: 1px solid rgba(156, 225, 255, 0.24);
   border-radius: 10px;
-  padding: 9px 10px;
-  background: rgba(7, 20, 38, 0.72);
+  padding: 10px;
+  background:
+    linear-gradient(180deg, rgba(9, 22, 40, 0.84), rgba(8, 19, 35, 0.9)),
+    radial-gradient(circle at 80% -20%, rgba(152, 214, 255, 0.2), transparent 40%);
   color: #d2ecff;
   font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: 0.45px;
   cursor: pointer;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 102px;
+  gap: 6px;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
 }
 .mission-board-option:hover,
 .mission-board-option:focus-visible {
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.01);
   border-color: rgba(255, 232, 154, 0.62);
-  background: rgba(31, 48, 70, 0.78);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.36);
 }
 .mission-board-option.active {
   border-color: rgba(255, 229, 153, 0.62);
   background: linear-gradient(135deg, rgba(255, 227, 141, 0.22), rgba(0, 212, 255, 0.18));
   color: #fff8df;
-  box-shadow: 0 0 14px rgba(255, 226, 141, 0.24);
+  box-shadow: 0 0 16px rgba(255, 226, 141, 0.24), inset 0 1px 0 rgba(255,255,255,0.12);
   animation: missionOptionPulse 1.6s ease-in-out infinite;
 }
 @keyframes missionOptionPulse {
   0%, 100% { box-shadow: 0 0 10px rgba(255, 226, 141, 0.18); }
   50% { box-shadow: 0 0 18px rgba(255, 226, 141, 0.34); }
 }
+.mission-option-kicker {
+  font-size: 0.54rem;
+  letter-spacing: 0.7px;
+  color: #9ec5df;
+  text-transform: uppercase;
+}
 .mission-option-icon {
-  font-size: 1rem;
+  font-size: 1.02rem;
   line-height: 1;
 }
 .mission-option-label {
-  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.94rem;
+  color: #f2fbff;
   text-align: left;
 }
-.mission-board-shortcuts {
-  margin-top: auto;
-  font-family: var(--font-mono);
-  font-size: 0.61rem;
-  color: #93b8d6;
-  opacity: 0.9;
-  padding-top: 4px;
+.mission-option-meta {
+  font-size: 0.6rem;
+  line-height: 1.45;
+  color: #97bdd8;
 }
 .mission-board-panel {
   position: relative;
@@ -1260,6 +1278,9 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   flex-direction: column;
   gap: 10px;
   min-width: 0;
+  border: 1px solid rgba(152, 211, 255, 0.18);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(10, 20, 38, 0.68), rgba(8, 16, 30, 0.74));
 }
 .mission-board-panel-head {
   display: flex;
@@ -1454,36 +1475,44 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   font-size: 0.66rem;
   color: #9bc2dc;
 }
-.mission-board-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
 .mission-board-nav-btn {
   border: 1px solid rgba(151, 212, 255, 0.3);
-  border-radius: 999px;
-  padding: 6px 12px;
+  border-radius: 10px;
+  padding: 6px;
+  width: 42px;
+  height: 42px;
   background: rgba(7, 20, 38, 0.72);
   color: #d7efff;
   font-family: var(--font-mono);
-  font-size: 0.64rem;
+  font-size: 1rem;
+  line-height: 1;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 .mission-board-nav-btn:hover,
 .mission-board-nav-btn:focus-visible {
-  transform: translateY(-1px);
+  transform: translateY(-1px) scale(1.03);
   border-color: rgba(255, 229, 153, 0.62);
   background: linear-gradient(135deg, rgba(255, 227, 141, 0.2), rgba(0, 212, 255, 0.18));
   box-shadow: 0 0 10px rgba(255, 226, 141, 0.2);
 }
 .mission-board-nav-label {
-  min-width: 112px;
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  min-width: 180px;
+  padding: 4px 10px;
   text-align: center;
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.64rem;
+  letter-spacing: 0.4px;
   color: #a7cade;
+  border: 1px solid rgba(151, 212, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(4, 14, 28, 0.45);
 }
 
 /* ============================================
@@ -4283,30 +4312,26 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   .mission-board-root {
     margin: 6px;
     border-radius: 10px;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
+    padding: 8px;
+    gap: 6px;
+  }
+  .mission-board-lobby {
+    grid-template-columns: 32px 1fr 32px;
+    gap: 6px;
   }
   .mission-board-menu {
-    border-right: none;
-    border-bottom: 1px solid rgba(152, 211, 255, 0.2);
-    padding: 8px;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 6px;
   }
   .mission-board-option {
-    padding: 7px 6px;
-    justify-content: center;
-    gap: 5px;
+    min-height: 74px;
+    padding: 8px 7px;
+    gap: 4px;
   }
-  .mission-option-label {
-    font-size: 0.62rem;
-  }
-  .mission-board-shortcuts {
-    grid-column: 1 / -1;
-    margin-top: 0;
-    text-align: center;
-  }
+  .mission-option-kicker { font-size: 0.49rem; }
+  .mission-option-label { font-size: 0.67rem; }
+  .mission-option-meta { font-size: 0.56rem; }
   .mission-board-panel {
     padding: 9px;
   }
@@ -4338,9 +4363,8 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   .mission-card-desc { font-size: 0.62rem; }
   .mission-card-meta { font-size: 0.55rem; }
   .mission-board-tip { font-size: 0.6rem; }
-  .mission-board-nav { gap: 5px; }
-  .mission-board-nav-btn { padding: 5px 8px; font-size: 0.57rem; }
-  .mission-board-nav-label { min-width: 88px; font-size: 0.56rem; }
+  .mission-board-nav-btn { width: 32px; height: 32px; font-size: 0.84rem; }
+  .mission-board-nav-label { min-width: 126px; font-size: 0.55rem; padding: 3px 8px; }
 
   /* ── Réalisations explorer mobile ── */
   .explorer-content { flex-direction:column; }
@@ -5578,21 +5602,28 @@ function getWindowContent(id) {
             </div>
           </div>
           <div class="mission-board-root" id="missionBoardRoot" tabindex="0" role="application" aria-label="Mission Board jeu video">
-            <aside class="mission-board-menu" aria-label="Options Mission Board">
-              <button type="button" class="mission-board-option active" data-board="quetes" aria-label="Option Quetes">
-                <span class="mission-option-icon" aria-hidden="true">📜</span>
-                <span class="mission-option-label">Quetes</span>
-              </button>
-              <button type="button" class="mission-board-option" data-board="guilde" aria-label="Option Guilde">
-                <span class="mission-option-icon" aria-hidden="true">🛡️</span>
-                <span class="mission-option-label">Guilde</span>
-              </button>
-              <button type="button" class="mission-board-option" data-board="missions" aria-label="Option Missions">
-                <span class="mission-option-icon" aria-hidden="true">🎯</span>
-                <span class="mission-option-label">Missions</span>
-              </button>
-              <div class="mission-board-shortcuts">Raccourcis: 1 / 2 / 3</div>
-            </aside>
+            <div class="mission-board-lobby" aria-label="Selection de mode">
+              <button type="button" class="mission-board-nav-btn mode-nav" id="missionBoardPrevBtn" aria-label="Section precedente">←</button>
+              <div class="mission-board-menu" aria-label="Modes de jeu Mission Board">
+                <button type="button" class="mission-board-option active" data-board="quetes" aria-label="Option Quetes">
+                  <span class="mission-option-kicker">MODE CAMPAGNE</span>
+                  <span class="mission-option-label"><span class="mission-option-icon" aria-hidden="true">📜</span> Quetes</span>
+                  <span class="mission-option-meta">Progression solo et objectifs techniques</span>
+                </button>
+                <button type="button" class="mission-board-option" data-board="guilde" aria-label="Option Guilde">
+                  <span class="mission-option-kicker">MODE MULTIJOUEUR</span>
+                  <span class="mission-option-label"><span class="mission-option-icon" aria-hidden="true">🛡️</span> Guilde</span>
+                  <span class="mission-option-meta">Equipe, synergie et environnement de travail</span>
+                </button>
+                <button type="button" class="mission-board-option" data-board="missions" aria-label="Option Missions">
+                  <span class="mission-option-kicker">MODE OPERATIONS</span>
+                  <span class="mission-option-label"><span class="mission-option-icon" aria-hidden="true">🎯</span> Missions</span>
+                  <span class="mission-option-meta">Journalieres, farming et quetes epiques</span>
+                </button>
+              </div>
+              <button type="button" class="mission-board-nav-btn mode-nav" id="missionBoardNextBtn" aria-label="Section suivante">→</button>
+            </div>
+            <div class="mission-board-nav-label" id="missionBoardNavLabel">1/3 • Quetes</div>
 
             <section class="mission-board-panel" aria-live="polite">
               <div class="mission-board-panel-head">
@@ -5611,12 +5642,7 @@ function getWindowContent(id) {
               </div>
 
               <div class="mission-board-grid" id="missionBoardGrid"></div>
-              <div class="mission-board-tip" id="missionBoardTip">Conseil: utilisez les options a gauche pour naviguer dans votre aventure.</div>
-              <div class="mission-board-nav" aria-label="Navigation Mission Board">
-                <button type="button" class="mission-board-nav-btn" id="missionBoardPrevBtn" aria-label="Section precedente">← Retour</button>
-                <div class="mission-board-nav-label" id="missionBoardNavLabel">1/3 • Quetes</div>
-                <button type="button" class="mission-board-nav-btn" id="missionBoardNextBtn" aria-label="Section suivante">Suivant →</button>
-              </div>
+              <div class="mission-board-tip" id="missionBoardTip">Conseil: utilisez les fleches pour changer de mode comme dans un lobby.</div>
             </section>
           </div>
         </div>
