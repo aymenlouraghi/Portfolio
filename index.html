@@ -1169,6 +1169,262 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   background: rgba(255, 221, 137, 0.28);
 }
 
+.mission-board-root {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  margin: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(151, 212, 255, 0.28);
+  background: linear-gradient(180deg, rgba(9, 17, 36, 0.9) 0%, rgba(7, 13, 28, 0.95) 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 12px 28px rgba(0,0,0,0.34);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 180px 1fr;
+}
+.mission-board-root::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(135, 223, 255, 0.08), transparent 30%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 20px);
+}
+.mission-board-menu {
+  position: relative;
+  z-index: 1;
+  padding: 12px 10px;
+  border-right: 1px solid rgba(152, 211, 255, 0.2);
+  background: linear-gradient(180deg, rgba(12, 25, 48, 0.92), rgba(8, 16, 31, 0.96));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.mission-board-option {
+  width: 100%;
+  border: 1px solid rgba(156, 225, 255, 0.22);
+  border-radius: 10px;
+  padding: 9px 10px;
+  background: rgba(7, 20, 38, 0.72);
+  color: #d2ecff;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.45px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.mission-board-option:hover,
+.mission-board-option:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(255, 232, 154, 0.62);
+  background: rgba(31, 48, 70, 0.78);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+}
+.mission-board-option.active {
+  border-color: rgba(255, 229, 153, 0.62);
+  background: linear-gradient(135deg, rgba(255, 227, 141, 0.22), rgba(0, 212, 255, 0.18));
+  color: #fff8df;
+  box-shadow: 0 0 14px rgba(255, 226, 141, 0.24);
+  animation: missionOptionPulse 1.6s ease-in-out infinite;
+}
+@keyframes missionOptionPulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(255, 226, 141, 0.18); }
+  50% { box-shadow: 0 0 18px rgba(255, 226, 141, 0.34); }
+}
+.mission-option-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+.mission-option-label {
+  flex: 1;
+  text-align: left;
+}
+.mission-board-shortcuts {
+  margin-top: auto;
+  font-family: var(--font-mono);
+  font-size: 0.61rem;
+  color: #93b8d6;
+  opacity: 0.9;
+  padding-top: 4px;
+}
+.mission-board-panel {
+  position: relative;
+  z-index: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.mission-board-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom: 1px solid rgba(151, 211, 255, 0.18);
+  padding-bottom: 8px;
+}
+.mission-board-title {
+  font-family: var(--font-mono);
+  color: #f1fbff;
+  font-size: 0.86rem;
+  letter-spacing: 0.7px;
+}
+.mission-board-subtitle {
+  color: #9dc4df;
+  font-size: 0.7rem;
+  margin-top: 3px;
+}
+.mission-board-rank {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  color: #fff4d2;
+  border: 1px solid rgba(255, 232, 171, 0.45);
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: rgba(255, 218, 129, 0.12);
+  white-space: nowrap;
+}
+.mission-board-xp {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mission-board-xp-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: #b3d5eb;
+  min-width: 150px;
+}
+.mission-board-xp-track {
+  height: 9px;
+  flex: 1;
+  border-radius: 999px;
+  border: 1px solid rgba(173, 213, 239, 0.46);
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+.mission-board-xp-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #4fd3ff 0%, #88ffbe 55%, #fff0a2 100%);
+  transition: width 0.35s ease;
+  box-shadow: 0 0 10px rgba(138,238,255,0.38);
+}
+.mission-board-grid {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding-right: 2px;
+}
+.mission-card {
+  border: 1px solid rgba(154, 214, 255, 0.24);
+  border-radius: 10px;
+  padding: 10px;
+  background: linear-gradient(180deg, rgba(11, 27, 48, 0.74) 0%, rgba(8, 18, 34, 0.85) 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: missionCardEnter 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes missionCardEnter {
+  from { opacity: 0; transform: translateY(6px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.mission-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.mission-card-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.69rem;
+  color: #ebf8ff;
+}
+.mission-card-icon {
+  font-size: 0.95rem;
+}
+.mission-rarity {
+  font-size: 0.58rem;
+  letter-spacing: 0.4px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+.mission-rarity.common {
+  color: #eaf6ff;
+  border-color: rgba(188, 217, 239, 0.5);
+  background: rgba(143, 186, 219, 0.12);
+}
+.mission-rarity.rare {
+  color: #dbf8ff;
+  border-color: rgba(129, 217, 255, 0.58);
+  background: rgba(72, 173, 227, 0.18);
+}
+.mission-rarity.epic {
+  color: #fff0cc;
+  border-color: rgba(255, 212, 124, 0.64);
+  background: rgba(255, 177, 65, 0.16);
+}
+.mission-rarity.legendary {
+  color: #fff5de;
+  border-color: rgba(255, 221, 130, 0.74);
+  background: linear-gradient(135deg, rgba(255, 178, 66, 0.23), rgba(255, 236, 176, 0.2));
+}
+.mission-card-desc {
+  font-size: 0.68rem;
+  color: #b8d6ea;
+  line-height: 1.5;
+}
+.mission-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: #92b7d2;
+}
+.mission-status {
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+.mission-status.active {
+  color: #d6ffea;
+  border-color: rgba(122, 251, 184, 0.46);
+  background: rgba(72, 194, 129, 0.16);
+}
+.mission-status.done {
+  color: #e3f4ff;
+  border-color: rgba(145, 210, 255, 0.42);
+  background: rgba(105, 162, 207, 0.18);
+}
+.mission-status.pending {
+  color: #fff1cc;
+  border-color: rgba(255, 210, 118, 0.46);
+  background: rgba(227, 171, 60, 0.14);
+}
+.mission-board-tip {
+  border-top: 1px dashed rgba(151, 211, 255, 0.2);
+  padding-top: 8px;
+  font-size: 0.66rem;
+  color: #9bc2dc;
+}
+
 /* ============================================
    WINDOW: RÉALISATIONS (File Explorer)
    ============================================ */
@@ -3963,6 +4219,54 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   .apropos-hud-badges { gap: 4px; }
   .apropos-hud-badge { font-size: 0.54rem; padding: 2px 6px; }
   .apropos-editor-root { margin: 6px; border-radius: 10px; }
+  .mission-board-root {
+    margin: 6px;
+    border-radius: 10px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  .mission-board-menu {
+    border-right: none;
+    border-bottom: 1px solid rgba(152, 211, 255, 0.2);
+    padding: 8px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .mission-board-option {
+    padding: 7px 6px;
+    justify-content: center;
+    gap: 5px;
+  }
+  .mission-option-label {
+    font-size: 0.62rem;
+  }
+  .mission-board-shortcuts {
+    grid-column: 1 / -1;
+    margin-top: 0;
+    text-align: center;
+  }
+  .mission-board-panel {
+    padding: 9px;
+  }
+  .mission-board-panel-head {
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .mission-board-title { font-size: 0.74rem; }
+  .mission-board-subtitle { font-size: 0.63rem; }
+  .mission-board-rank { font-size: 0.56rem; padding: 3px 7px; }
+  .mission-board-xp { flex-direction: column; align-items: stretch; gap: 4px; }
+  .mission-board-xp-label { min-width: 0; font-size: 0.6rem; }
+  .mission-board-grid {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+  .mission-card { padding: 8px; }
+  .mission-card-name { font-size: 0.63rem; }
+  .mission-card-desc { font-size: 0.62rem; }
+  .mission-card-meta { font-size: 0.55rem; }
+  .mission-board-tip { font-size: 0.6rem; }
 
   /* ── Réalisations explorer mobile ── */
   .explorer-content { flex-direction:column; }
@@ -5199,24 +5503,42 @@ function getWindowContent(id) {
               <span class="apropos-hud-badge">CLASS: SISR</span>
             </div>
           </div>
-          <div class="editor-container apropos-editor-root" tabindex="0">
-            <div class="editor-sidebar">
-              <div class="editor-sidebar-icon active" data-action="files" title="Quetes">📜</div>
-              <div class="editor-sidebar-icon" data-action="search" title="Scanner">🔮</div>
-              <div class="editor-sidebar-icon" data-action="swap" title="Changer de quete">🗺️</div>
-              <div class="editor-sidebar-icon" data-action="edit" title="Mode forge">⚒️</div>
-            </div>
-            <div class="editor-main">
-              <div class="editor-tabs" id="aproposTabs"></div>
-              <div class="editor-toolbar">
-                <input id="aproposSearch" class="editor-search" type="text" placeholder="Scanner les quetes... (Ctrl+F)">
-                <button class="editor-btn" id="aproposPrev" title="Resultat precedent">↑</button>
-                <button class="editor-btn" id="aproposNext" title="Resultat suivant">↓</button>
-                <button class="editor-btn" id="aproposEditToggle" title="Activer/Desactiver l edition">Forge</button>
-                <span class="editor-status" id="aproposStatus">Mission prete</span>
+          <div class="mission-board-root" id="missionBoardRoot" tabindex="0" role="application" aria-label="Mission Board jeu video">
+            <aside class="mission-board-menu" aria-label="Options Mission Board">
+              <button type="button" class="mission-board-option active" data-board="quetes" aria-label="Option Quetes">
+                <span class="mission-option-icon" aria-hidden="true">📜</span>
+                <span class="mission-option-label">Quetes</span>
+              </button>
+              <button type="button" class="mission-board-option" data-board="guilde" aria-label="Option Guilde">
+                <span class="mission-option-icon" aria-hidden="true">🛡️</span>
+                <span class="mission-option-label">Guilde</span>
+              </button>
+              <button type="button" class="mission-board-option" data-board="missions" aria-label="Option Missions">
+                <span class="mission-option-icon" aria-hidden="true">🎯</span>
+                <span class="mission-option-label">Missions</span>
+              </button>
+              <div class="mission-board-shortcuts">Raccourcis: 1 / 2 / 3</div>
+            </aside>
+
+            <section class="mission-board-panel" aria-live="polite">
+              <div class="mission-board-panel-head">
+                <div>
+                  <div class="mission-board-title" id="missionBoardTitle">Quetes principales</div>
+                  <div class="mission-board-subtitle" id="missionBoardSubtitle">Selectionnez un objectif et suivez la progression.</div>
+                </div>
+                <div class="mission-board-rank" id="missionBoardRank">RANG BRONZE</div>
               </div>
-              <div class="editor-code" id="aproposCode"></div>
-            </div>
+
+              <div class="mission-board-xp">
+                <div class="mission-board-xp-label" id="missionBoardXpLabel">Progression de campagne</div>
+                <div class="mission-board-xp-track">
+                  <div class="mission-board-xp-fill" id="missionBoardXpFill"></div>
+                </div>
+              </div>
+
+              <div class="mission-board-grid" id="missionBoardGrid"></div>
+              <div class="mission-board-tip" id="missionBoardTip">Conseil: utilisez les options a gauche pour naviguer dans votre aventure.</div>
+            </section>
           </div>
         </div>
       `
@@ -7032,13 +7354,61 @@ function initMonParcours() {
   const mapEl = root.querySelector('.parcours-rpg-map');
   const dialogEl = root.querySelector('.parcours-dialog');
   const nodes = root.querySelectorAll('.rpg-node');
-  const routeOrder = ['bac', 'bts', 'alternance', 'futur'];
   const nodeByStep = {};
   nodes.forEach(node => {
     nodeByStep[node.dataset.step] = node;
   });
 
+  function getPolylinePoints() {
+    const polyline = root.querySelector('.parcours-path polyline');
+    const rawPoints = polyline ? (polyline.getAttribute('points') || '') : '';
+    const parsed = rawPoints
+      .trim()
+      .split(/\s+/)
+      .map(pair => {
+        const [x, y] = pair.split(',').map(Number);
+        if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+        return { x, y };
+      })
+      .filter(Boolean);
+
+    if (parsed.length) return parsed;
+    return [
+      { x: 14, y: 70 },
+      { x: 34, y: 58 },
+      { x: 52, y: 65 },
+      { x: 71, y: 45 },
+      { x: 88, y: 24 }
+    ];
+  }
+
+  const pathPoints = getPolylinePoints();
+  const stepPathIndex = {};
+  const stepByPathIndex = {};
+
+  Object.entries(nodeByStep).forEach(([stepKey, node]) => {
+    const x = Number(node.dataset.x || '0');
+    const y = Number(node.dataset.y || '0');
+    let closestIndex = 0;
+    let closestDist = Number.POSITIVE_INFINITY;
+
+    pathPoints.forEach((point, index) => {
+      const dist = Math.hypot(point.x - x, point.y - y);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestIndex = index;
+      }
+    });
+
+    stepPathIndex[stepKey] = closestIndex;
+    stepByPathIndex[closestIndex] = stepKey;
+  });
+
   let currentStep = 'bac';
+  let heroPosition = {
+    x: Number(nodeByStep[currentStep]?.dataset.x || '14'),
+    y: Number(nodeByStep[currentStep]?.dataset.y || '70')
+  };
   let isMoving = false;
   let pendingTarget = null;
   let typingTimer = null;
@@ -7093,45 +7463,50 @@ function initMonParcours() {
 
   function setHeroAtStep(stepKey, instant = false) {
     const node = nodeByStep[stepKey];
-    if (!node || !heroEl) return;
+    if (!node) return;
     const x = Number(node.dataset.x || '0');
     const y = Number(node.dataset.y || '0');
+    setHeroPosition(x, y, instant);
+  }
+
+  function setHeroPosition(x, y, instant = false) {
+    if (!heroEl) return;
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return;
     if (instant) heroEl.style.transition = 'none';
     heroEl.style.left = x + '%';
     heroEl.style.top = y + '%';
+    heroPosition = { x, y };
     if (instant) {
       heroEl.offsetHeight;
       heroEl.style.transition = 'left 0.4s linear, top 0.4s linear';
     }
   }
 
-  function getNodePixelPosition(stepKey) {
-    const node = nodeByStep[stepKey];
-    if (!node || !mapEl) return null;
+  function getPixelPosition(position) {
+    if (!position || !mapEl) return null;
     const mapRect = mapEl.getBoundingClientRect();
-    const rect = node.getBoundingClientRect();
     return {
-      x: rect.left - mapRect.left + (rect.width / 2),
-      y: rect.top - mapRect.top + (rect.height / 2)
+      x: (position.x / 100) * mapRect.width,
+      y: (position.y / 100) * mapRect.height
     };
   }
 
-  function animateHeroTo(stepKey) {
+  function animateHeroTo(targetPosition) {
     return new Promise(resolve => {
-      if (!heroEl) {
+      if (!heroEl || !targetPosition) {
         resolve();
         return;
       }
-      const from = getNodePixelPosition(currentStep);
-      const to = getNodePixelPosition(stepKey);
+      const from = getPixelPosition(heroPosition);
+      const to = getPixelPosition(targetPosition);
       if (!from || !to) {
-        setHeroAtStep(stepKey);
+        setHeroPosition(targetPosition.x, targetPosition.y);
         resolve();
         return;
       }
 
       const dist = Math.hypot(to.x - from.x, to.y - from.y);
-      const duration = Math.max(260, Math.min(900, dist * 3));
+      const duration = Math.max(220, Math.min(860, dist * 2.8));
       heroEl.style.transition = `left ${duration}ms linear, top ${duration}ms linear`;
       heroEl.classList.add('walking');
 
@@ -7148,19 +7523,25 @@ function initMonParcours() {
       };
 
       heroEl.addEventListener('transitionend', onTransitionEnd);
-      setHeroAtStep(stepKey);
+      setHeroPosition(targetPosition.x, targetPosition.y);
     });
   }
 
   function getRouteBetween(fromStep, toStep) {
-    const fromIndex = routeOrder.indexOf(fromStep);
-    const toIndex = routeOrder.indexOf(toStep);
-    if (fromIndex === -1 || toIndex === -1 || fromIndex === toIndex) return [];
+    const fromIndex = stepPathIndex[fromStep];
+    const toIndex = stepPathIndex[toStep];
+    if (!Number.isInteger(fromIndex) || !Number.isInteger(toIndex) || fromIndex === toIndex) return [];
 
     const path = [];
     const direction = toIndex > fromIndex ? 1 : -1;
     for (let i = fromIndex + direction; direction > 0 ? i <= toIndex : i >= toIndex; i += direction) {
-      path.push(routeOrder[i]);
+      const point = pathPoints[i];
+      if (!point) continue;
+      path.push({
+        x: point.x,
+        y: point.y,
+        step: stepByPathIndex[i] || null
+      });
     }
     return path;
   }
@@ -7185,14 +7566,21 @@ function initMonParcours() {
     if (textEl) textEl.textContent = 'Le personnage se dirige vers le prochain jalon...';
 
     const route = getRouteBetween(currentStep, stepKey);
-    for (const segmentStep of route) {
-      await animateHeroTo(segmentStep);
-      currentStep = segmentStep;
+    for (const segment of route) {
+      await animateHeroTo(segment);
+      if (!segment.step) continue;
+      currentStep = segment.step;
       nodes.forEach(node => {
         const isSelected = node.dataset.step === currentStep;
         node.classList.toggle('active', isSelected);
         node.classList.toggle('current', isSelected);
       });
+      triggerArrivalBurst(currentStep);
+    }
+
+    if (currentStep !== stepKey) {
+      setHeroAtStep(stepKey);
+      currentStep = stepKey;
       triggerArrivalBurst(currentStep);
     }
 
@@ -7668,219 +8056,256 @@ function initAproposEditor() {
   const win = state.windows.apropos;
   if (!win) return;
 
-  const root = win.querySelector('.apropos-editor-root');
-  const tabsEl = win.querySelector('#aproposTabs');
-  const codeEl = win.querySelector('#aproposCode');
-  const searchEl = win.querySelector('#aproposSearch');
-  const statusEl = win.querySelector('#aproposStatus');
-  const prevBtn = win.querySelector('#aproposPrev');
-  const nextBtn = win.querySelector('#aproposNext');
-  const editBtn = win.querySelector('#aproposEditToggle');
-  if (!root || !tabsEl || !codeEl || !searchEl || !statusEl || !prevBtn || !nextBtn || !editBtn) return;
+  const root = win.querySelector('#missionBoardRoot');
+  const titleEl = win.querySelector('#missionBoardTitle');
+  const subtitleEl = win.querySelector('#missionBoardSubtitle');
+  const rankEl = win.querySelector('#missionBoardRank');
+  const xpLabelEl = win.querySelector('#missionBoardXpLabel');
+  const xpFillEl = win.querySelector('#missionBoardXpFill');
+  const gridEl = win.querySelector('#missionBoardGrid');
+  const tipEl = win.querySelector('#missionBoardTip');
+  const options = win.querySelectorAll('.mission-board-option');
+  if (!root || !titleEl || !subtitleEl || !rankEl || !xpLabelEl || !xpFillEl || !gridEl || !tipEl || !options.length) return;
+  if (root.dataset.initialized === '1') return;
+  root.dataset.initialized = '1';
 
-  const fileIds = Object.keys(APROPOS_EDITOR_FILES);
-  if (!fileIds.length) return;
-
-  fileIds.forEach(fileId => {
-    if (!Array.isArray(state.aproposDrafts[fileId])) {
-      state.aproposDrafts[fileId] = [...APROPOS_EDITOR_FILES[fileId].lines];
+  const boardOrder = ['quetes', 'guilde', 'missions'];
+  const boardData = {
+    quetes: {
+      title: 'Quetes principales',
+      subtitle: 'Progression du joueur sur les objectifs techniques majeurs.',
+      rank: 'RANG OPERATEUR',
+      xpLabel: 'Progression de campagne',
+      progress: 74,
+      tip: 'Astuce: commencez par les quetes Actif pour gagner de l XP plus vite.',
+      entries: [
+        {
+          icon: '🖥️',
+          name: 'Stabiliser le parc informatique',
+          rarity: 'epic',
+          desc: 'Preparation, deploiement et maintien des postes pour reduire les interruptions utilisateurs.',
+          zone: 'Zone: Support N1/N2',
+          status: 'active',
+          statusLabel: 'Actif'
+        },
+        {
+          icon: '🌐',
+          name: 'Renforcer la fiabilite reseau',
+          rarity: 'rare',
+          desc: 'Diagnostic LAN/WAN, ajustements des equipements et suivi de la documentation reseau.',
+          zone: 'Zone: Infrastructure',
+          status: 'active',
+          statusLabel: 'Actif'
+        },
+        {
+          icon: '📚',
+          name: 'Capitaliser les procedures',
+          rarity: 'common',
+          desc: 'Rendre les interventions reproductibles avec des procedures courtes et claires.',
+          zone: 'Zone: Documentation',
+          status: 'done',
+          statusLabel: 'Termine'
+        },
+        {
+          icon: '🔐',
+          name: 'Passage niveau Cyber',
+          rarity: 'legendary',
+          desc: 'Objectif long terme: monter en competence reseau + cybersecurite.',
+          zone: 'Zone: Evolution 2026+',
+          status: 'pending',
+          statusLabel: 'A preparer'
+        }
+      ]
+    },
+    guilde: {
+      title: 'Guilde Konvergence',
+      subtitle: 'Fiche de la guilde, style de jeu et synergie avec le hero.',
+      rank: 'RANG ALLIE',
+      xpLabel: 'Cohesion de guilde',
+      progress: 82,
+      tip: 'La guilde booste l XP quand la communication est rapide et documentee.',
+      entries: [
+        {
+          icon: '🏢',
+          name: 'Quartier general',
+          rarity: 'rare',
+          desc: 'Konvergence, TPE informatique basee a Moirans, accompagne TPE/PME au quotidien.',
+          zone: 'Zone: Moirans',
+          status: 'done',
+          statusLabel: 'Debloque'
+        },
+        {
+          icon: '🤝',
+          name: 'Philosophie de guilde',
+          rarity: 'epic',
+          desc: 'Reactivite, pedagogie et qualite de service pour garder les clients en confiance.',
+          zone: 'Zone: Relation client',
+          status: 'active',
+          statusLabel: 'En cours'
+        },
+        {
+          icon: '🧰',
+          name: 'Arsenal technique',
+          rarity: 'common',
+          desc: 'Windows, reseau, outils support et interventions sur site ou a distance.',
+          zone: 'Zone: Toolset',
+          status: 'active',
+          statusLabel: 'Operationnel'
+        },
+        {
+          icon: '🎓',
+          name: 'Synergie BTS SISR',
+          rarity: 'legendary',
+          desc: 'Chaque mission entreprise nourrit directement les competences du parcours SISR.',
+          zone: 'Zone: Formation',
+          status: 'done',
+          statusLabel: 'Valide'
+        }
+      ]
+    },
+    missions: {
+      title: 'Missions hebdomadaires',
+      subtitle: 'Cycle de jeu reel entre support, terrain et progression.',
+      rank: 'RANG STRATEGE',
+      xpLabel: 'Cadence de mission',
+      progress: 68,
+      tip: 'Plan ideal: Lundi tri, Mercredi terrain, Vendredi debrief + progression.',
+      entries: [
+        {
+          icon: '📥',
+          name: 'Lundi - Priorisation',
+          rarity: 'common',
+          desc: 'Tri des incidents critiques et resolution rapide des blocages utilisateurs.',
+          zone: 'Zone: Helpdesk',
+          status: 'done',
+          statusLabel: 'Bouclee'
+        },
+        {
+          icon: '🛠️',
+          name: 'Mercredi - Terrain',
+          rarity: 'epic',
+          desc: 'Installation de materiel, verifications reseau et mise a jour documentaire.',
+          zone: 'Zone: On-site',
+          status: 'active',
+          statusLabel: 'Actif'
+        },
+        {
+          icon: '📈',
+          name: 'Vendredi - Debrief',
+          rarity: 'rare',
+          desc: 'Analyse des incidents de la semaine et capitalisation des bonnes pratiques.',
+          zone: 'Zone: Post-mortem',
+          status: 'active',
+          statusLabel: 'En cours'
+        },
+        {
+          icon: '🏆',
+          name: 'Boss final',
+          rarity: 'legendary',
+          desc: 'Atteindre un profil autonome en production IT et securite operationnelle.',
+          zone: 'Zone: Objectif long terme',
+          status: 'pending',
+          statusLabel: 'Verrouille'
+        }
+      ]
     }
-  });
-
-  const editorState = {
-    currentFile: fileIds[0],
-    selectedLine: 0,
-    search: '',
-    matches: [],
-    matchIndex: -1,
-    editMode: false,
   };
 
-  function escapeForHtml(str) {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+  let currentBoard = 'quetes';
+
+  function getBoardIndex(boardKey) {
+    return boardOrder.indexOf(boardKey);
   }
 
-  function getLines() {
-    return state.aproposDrafts[editorState.currentFile];
+  function getRarityClass(rarity) {
+    if (rarity === 'rare' || rarity === 'epic' || rarity === 'legendary') return rarity;
+    return 'common';
   }
 
-  function updateStatus() {
-    const fileLabel = APROPOS_EDITOR_FILES[editorState.currentFile].label;
-    const searchInfo = editorState.search
-      ? `${editorState.matches.length} resultat(s)`
-      : 'Aucune recherche';
-    const modeInfo = editorState.editMode ? 'Edition active' : 'Lecture seule';
-    statusEl.textContent = `${fileLabel} | Ligne ${editorState.selectedLine + 1} | ${searchInfo} | ${modeInfo}`;
+  function getStatusClass(status) {
+    if (status === 'done' || status === 'pending') return status;
+    return 'active';
   }
 
-  function renderTabs() {
-    tabsEl.innerHTML = fileIds.map(fileId => `
-      <div class="editor-tab ${fileId === editorState.currentFile ? 'active' : ''}" data-file-id="${fileId}">
-        ${APROPOS_EDITOR_FILES[fileId].label}
-      </div>
-    `).join('');
+  function renderBoard(boardKey) {
+    const data = boardData[boardKey];
+    if (!data) return;
+    currentBoard = boardKey;
 
-    tabsEl.querySelectorAll('.editor-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        const newFileId = tab.dataset.fileId;
-        if (!newFileId || newFileId === editorState.currentFile) return;
-        editorState.currentFile = newFileId;
-        editorState.selectedLine = 0;
-        editorState.matchIndex = -1;
-        renderTabs();
-        renderCode();
-      });
+    options.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.board === boardKey);
     });
-  }
 
-  function computeMatches() {
-    const query = editorState.search.trim().toLowerCase();
-    if (!query) {
-      editorState.matches = [];
-      editorState.matchIndex = -1;
-      return;
-    }
-    editorState.matches = getLines()
-      .map((line, idx) => ({ idx, hit: String(line).toLowerCase().includes(query) }))
-      .filter(item => item.hit)
-      .map(item => item.idx);
+    titleEl.textContent = data.title;
+    subtitleEl.textContent = data.subtitle;
+    rankEl.textContent = data.rank;
+    xpLabelEl.textContent = data.xpLabel;
+    tipEl.textContent = data.tip;
 
-    if (!editorState.matches.length) {
-      editorState.matchIndex = -1;
-      return;
-    }
-    if (editorState.matchIndex < 0 || editorState.matchIndex >= editorState.matches.length) {
-      editorState.matchIndex = 0;
-    }
-    editorState.selectedLine = editorState.matches[editorState.matchIndex];
-  }
+    xpFillEl.style.width = '0%';
+    requestAnimationFrame(() => {
+      xpFillEl.style.width = `${data.progress}%`;
+    });
 
-  function renderCode() {
-    computeMatches();
-    const lines = getLines();
-    codeEl.classList.toggle('edit-mode', editorState.editMode);
-    codeEl.innerHTML = lines.map((line, idx) => {
-      const isSelected = idx === editorState.selectedLine;
-      const hitPos = editorState.matches.indexOf(idx);
-      const isMatch = hitPos !== -1;
-      const isActiveMatch = isMatch && hitPos === editorState.matchIndex;
-      const classes = [
-        'code-line',
-        isSelected ? 'selected' : '',
-        isMatch ? 'match' : '',
-        isActiveMatch ? 'active-match' : ''
-      ].filter(Boolean).join(' ');
-      return `
-        <div class="${classes}" data-line-index="${idx}">
-          <span class="code-line-text" contenteditable="${editorState.editMode ? 'true' : 'false'}" spellcheck="false">${escapeForHtml(line)}</span>
+    gridEl.innerHTML = data.entries.map((entry, idx) => `
+      <article class="mission-card" style="animation-delay:${idx * 50}ms;">
+        <div class="mission-card-head">
+          <div class="mission-card-name">
+            <span class="mission-card-icon" aria-hidden="true">${entry.icon}</span>
+            <span>${entry.name}</span>
+          </div>
+          <span class="mission-rarity ${getRarityClass(entry.rarity)}">${entry.rarity.toUpperCase()}</span>
         </div>
-      `;
-    }).join('');
-
-    updateStatus();
+        <p class="mission-card-desc">${entry.desc}</p>
+        <div class="mission-card-meta">
+          <span>${entry.zone}</span>
+          <span class="mission-status ${getStatusClass(entry.status)}">${entry.statusLabel}</span>
+        </div>
+      </article>
+    `).join('');
   }
 
-  function goToMatch(step) {
-    if (!editorState.matches.length) return;
-    editorState.matchIndex = (editorState.matchIndex + step + editorState.matches.length) % editorState.matches.length;
-    editorState.selectedLine = editorState.matches[editorState.matchIndex];
-    renderCode();
-    const line = codeEl.querySelector(`.code-line[data-line-index="${editorState.selectedLine}"]`);
-    if (line) line.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-
-  function swapFile() {
-    const currentIdx = fileIds.indexOf(editorState.currentFile);
-    const nextIdx = (currentIdx + 1) % fileIds.length;
-    editorState.currentFile = fileIds[nextIdx];
-    editorState.selectedLine = 0;
-    editorState.matchIndex = -1;
-    renderTabs();
-    renderCode();
-  }
-
-  function toggleEditMode() {
-    editorState.editMode = !editorState.editMode;
-    editBtn.classList.toggle('active', editorState.editMode);
-    editBtn.textContent = editorState.editMode ? 'Lecture' : 'Forge';
-    renderCode();
-  }
-
-  tabsEl.addEventListener('dblclick', () => toggleEditMode());
-
-  codeEl.addEventListener('click', e => {
-    const lineEl = e.target.closest('.code-line');
-    if (!lineEl) return;
-    editorState.selectedLine = Number(lineEl.dataset.lineIndex || 0);
-    renderCode();
-  });
-
-  codeEl.addEventListener('input', e => {
-    const textEl = e.target.closest('.code-line-text');
-    if (!textEl || !editorState.editMode) return;
-    const lineEl = textEl.closest('.code-line');
-    if (!lineEl) return;
-    const lineIndex = Number(lineEl.dataset.lineIndex || 0);
-    getLines()[lineIndex] = textEl.textContent || '';
-    computeMatches();
-    updateStatus();
-  });
-
-  searchEl.addEventListener('input', () => {
-    editorState.search = searchEl.value;
-    editorState.matchIndex = -1;
-    renderCode();
-  });
-
-  prevBtn.addEventListener('click', () => goToMatch(-1));
-  nextBtn.addEventListener('click', () => goToMatch(1));
-  editBtn.addEventListener('click', () => toggleEditMode());
-
-  win.querySelectorAll('.editor-sidebar-icon').forEach(btn => {
+  options.forEach(btn => {
     btn.addEventListener('click', () => {
-      win.querySelectorAll('.editor-sidebar-icon').forEach(icon => icon.classList.remove('active'));
-      btn.classList.add('active');
-      const action = btn.dataset.action;
-      if (action === 'search') {
-        searchEl.focus();
-        searchEl.select();
-      }
-      if (action === 'swap') swapFile();
-      if (action === 'edit') toggleEditMode();
+      const boardKey = btn.dataset.board;
+      if (!boardKey || boardKey === currentBoard) return;
+      renderBoard(boardKey);
     });
   });
 
   root.addEventListener('keydown', e => {
-    const key = e.key.toLowerCase();
-    if (e.ctrlKey && key === 'f') {
+    if (e.key === '1') {
       e.preventDefault();
-      searchEl.focus();
-      searchEl.select();
+      renderBoard('quetes');
       return;
     }
-    if (e.key === 'F3' || (e.ctrlKey && key === 'g')) {
+    if (e.key === '2') {
       e.preventDefault();
-      goToMatch(e.shiftKey ? -1 : 1);
+      renderBoard('guilde');
       return;
     }
-    if (e.ctrlKey && key === 'e') {
+    if (e.key === '3') {
       e.preventDefault();
-      toggleEditMode();
+      renderBoard('missions');
       return;
     }
-    if (e.ctrlKey && e.key === 'Tab') {
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       e.preventDefault();
-      swapFile();
+      const currentIndex = getBoardIndex(currentBoard);
+      const nextBoard = boardOrder[(currentIndex + 1) % boardOrder.length];
+      renderBoard(nextBoard);
+      return;
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const currentIndex = getBoardIndex(currentBoard);
+      const prevBoard = boardOrder[(currentIndex - 1 + boardOrder.length) % boardOrder.length];
+      renderBoard(prevBoard);
     }
   });
 
-  renderTabs();
-  renderCode();
+  renderBoard(currentBoard);
   setTimeout(() => root.focus(), 10);
 }
 
