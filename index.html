@@ -1700,14 +1700,93 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
 }
 .mission-board-argument-panel {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   padding: 12px;
+  overflow: auto;
 }
 .mission-board-grid {
   display: block;
   width: min(900px, 100%);
   margin: 0 auto;
+}
+.mission-full-view {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid rgba(151, 212, 255, 0.25);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 85% -10%, rgba(149, 215, 255, 0.16), transparent 44%),
+    linear-gradient(180deg, rgba(9, 23, 43, 0.86), rgba(7, 16, 31, 0.88));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 12px 24px rgba(0,0,0,0.3);
+  padding: clamp(14px, 2vw, 22px);
+}
+.mission-full-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.8px;
+  color: #9ec4df;
+  text-transform: uppercase;
+}
+.mission-full-title {
+  font-family: var(--font-mono);
+  font-size: clamp(1.25rem, 2.4vw, 1.95rem);
+  color: #f4fcff;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+.mission-full-text {
+  font-size: clamp(0.88rem, 1.2vw, 1.08rem);
+  line-height: 1.72;
+  color: #c3dfef;
+}
+.mission-full-subtext {
+  font-size: clamp(0.74rem, 0.95vw, 0.86rem);
+  color: #a5c7de;
+}
+.mission-full-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.mission-full-chip {
+  border: 1px solid rgba(154, 214, 255, 0.28);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: #d8f1ff;
+  background: rgba(7, 24, 43, 0.72);
+}
+.mission-photo-zone {
+  margin-top: auto;
+  min-height: clamp(180px, 32vh, 280px);
+  border: 1px dashed rgba(169, 224, 255, 0.4);
+  border-radius: 12px;
+  background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0 10px, rgba(255,255,255,0.01) 10px 20px),
+    linear-gradient(180deg, rgba(9, 26, 48, 0.48), rgba(6, 15, 30, 0.62));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.mission-photo-placeholder {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #a4c5db;
+  font-size: 0.8rem;
+}
+.mission-photo-placeholder strong {
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  color: #e8f9ff;
+  letter-spacing: 0.6px;
 }
 .mission-board-grid > .mission-group {
   margin-bottom: 0;
@@ -4624,6 +4703,20 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
     grid-template-columns: 32px minmax(0, 1fr) auto 32px;
     gap: 6px;
   }
+  .mission-full-view {
+    padding: 12px;
+    gap: 10px;
+  }
+  .mission-full-title { font-size: 1.05rem; }
+  .mission-full-text { font-size: 0.76rem; }
+  .mission-full-subtext { font-size: 0.66rem; }
+  .mission-full-chip { font-size: 0.55rem; padding: 3px 8px; }
+  .mission-photo-zone {
+    min-height: 130px;
+    padding: 12px;
+  }
+  .mission-photo-placeholder { font-size: 0.66rem; }
+  .mission-photo-placeholder strong { font-size: 0.7rem; }
   .mission-argument-list {
     grid-template-columns: 1fr;
     gap: 6px;
@@ -8885,6 +8978,7 @@ function initAproposEditor() {
         const entries = Array.isArray(group.entries) ? group.entries : [];
         return entries.map(entry => ({
           chapter: group.title || `Partie ${index + 1}`,
+          chapterDesc: group.description || data.subtitle || '',
           entry
         }));
       });
@@ -8893,6 +8987,7 @@ function initAproposEditor() {
     const entries = Array.isArray(data.entries) ? data.entries : [];
     return entries.map((entry, index) => ({
       chapter: data.title || `Partie ${index + 1}`,
+      chapterDesc: data.subtitle || '',
       entry
     }));
   }
@@ -8934,6 +9029,7 @@ function initAproposEditor() {
     }
 
     const currentArgument = boardArguments[currentArgumentIndex];
+    const modeName = getBoardName(currentBoard);
     const entry = currentArgument.entry || {
       icon: '•',
       name: 'Argument',
@@ -8943,14 +9039,31 @@ function initAproposEditor() {
       status: 'active',
       statusLabel: 'Info'
     };
-    const chapter = currentArgument.chapter || getBoardName(currentBoard);
+    const chapter = currentArgument.chapter || modeName;
+    const chapterDesc = currentArgument.chapterDesc || '';
+    const entryTitle = entry.name || 'Argument';
+    const entryDesc = entry.desc || 'Aucun contenu disponible.';
+    const entryZone = entry.zone || 'Zone: Inconnue';
+    const entryStatus = entry.statusLabel || 'Info';
+    const entryRarity = String(entry.rarity || 'common').toUpperCase();
 
-    partLabelEl.textContent = `${currentArgumentIndex + 1}/${boardArguments.length} • ${getBoardName(currentBoard)}`;
+    partLabelEl.textContent = `${currentArgumentIndex + 1}/${boardArguments.length} • ${modeName}`;
     gridEl.innerHTML = `
-      <section class="mission-group mission-part-card" style="animation-delay:0ms;">
-        <h3 class="mission-group-title">${chapter}</h3>
-        <div class="mission-group-list">
-          ${renderEntry(entry, 0)}
+      <section class="mission-full-view" style="animation-delay:0ms;">
+        <div class="mission-full-kicker">${modeName} • ${chapter}</div>
+        <h2 class="mission-full-title">${entryTitle}</h2>
+        <p class="mission-full-text">${entryDesc}</p>
+        <div class="mission-full-meta">
+          <span class="mission-full-chip">${entryZone}</span>
+          <span class="mission-full-chip">${entryStatus}</span>
+          <span class="mission-full-chip">${entryRarity}</span>
+        </div>
+        ${chapterDesc ? `<p class="mission-full-text mission-full-subtext">${chapterDesc}</p>` : ''}
+        <div class="mission-photo-zone">
+          <div class="mission-photo-placeholder">
+            <strong>Zone image ${currentArgumentIndex + 1}</strong>
+            <span>Ajoute une photo pour cette partie ici.</span>
+          </div>
         </div>
       </section>
     `;
