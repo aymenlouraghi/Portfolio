@@ -1536,6 +1536,177 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   background: rgba(4, 14, 28, 0.45);
 }
 
+/* Mission Board flow: launch > menu > details */
+.mission-board-launch {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background:
+    radial-gradient(circle at 50% -20%, rgba(255, 224, 143, 0.22) 0%, transparent 52%),
+    linear-gradient(160deg, rgba(6, 16, 34, 0.96), rgba(7, 22, 42, 0.94));
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.mission-board-launch.hidden {
+  opacity: 0;
+  transform: scale(1.02);
+  pointer-events: none;
+}
+.mission-launch-frame {
+  width: min(520px, 100%);
+  border: 1px solid rgba(156, 225, 255, 0.28);
+  border-radius: 12px;
+  padding: 16px;
+  background: rgba(5, 16, 33, 0.86);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+  animation: missionLaunchIntro 0.48s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mission-launch-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 1.2px;
+  color: #9dc4df;
+  text-transform: uppercase;
+}
+.mission-launch-title {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: clamp(0.92rem, 2vw, 1.1rem);
+  color: #f2fbff;
+  letter-spacing: 0.8px;
+  text-shadow: 0 0 14px rgba(129, 217, 255, 0.34);
+}
+.mission-launch-status {
+  margin-top: 8px;
+  font-size: 0.72rem;
+  color: #a6cbe4;
+}
+.mission-launch-bar {
+  margin-top: 12px;
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(151, 212, 255, 0.42);
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+.mission-launch-fill {
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #4fd3ff 0%, #88ffbe 55%, #fff0a2 100%);
+  box-shadow: 0 0 14px rgba(138,238,255,0.4);
+}
+.mission-launch-fill.active {
+  animation: missionLaunchLoad 1.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.mission-board-menu-screen,
+.mission-board-detail-screen {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.mission-board-menu-screen {
+  gap: 10px;
+}
+.mission-board-menu-head {
+  border: 1px solid rgba(151, 211, 255, 0.2);
+  border-radius: 10px;
+  padding: 10px;
+  background: linear-gradient(90deg, rgba(8, 20, 38, 0.78), rgba(8, 30, 52, 0.72));
+}
+.mission-board-menu-title {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.8px;
+  color: #ecf8ff;
+}
+.mission-board-menu-subtitle {
+  margin-top: 4px;
+  font-size: 0.66rem;
+  color: #9fc4de;
+}
+
+.mission-board-detail-screen {
+  gap: 8px;
+  flex: 1;
+}
+.mission-board-detail-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.mission-board-home-btn {
+  border: 1px solid rgba(151, 212, 255, 0.3);
+  border-radius: 999px;
+  padding: 6px 12px;
+  background: rgba(7, 20, 38, 0.72);
+  color: #d7efff;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.35px;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.mission-board-home-btn:hover,
+.mission-board-home-btn:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(255, 229, 153, 0.62);
+  background: linear-gradient(135deg, rgba(255, 227, 141, 0.2), rgba(0, 212, 255, 0.18));
+}
+.mission-board-part-nav {
+  display: grid;
+  grid-template-columns: 42px 1fr 42px;
+  gap: 8px;
+  align-items: center;
+}
+.mission-board-detail-topbar .mission-board-nav-label,
+.mission-board-part-nav .mission-board-nav-label {
+  min-width: 0;
+}
+.mission-board-panel {
+  flex: 1;
+  min-height: 0;
+}
+.mission-board-grid {
+  display: block;
+}
+.mission-board-grid > .mission-group {
+  margin-bottom: 0;
+}
+.mission-argument-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.mission-argument-item {
+  border: 1px solid rgba(154, 214, 255, 0.24);
+  border-radius: 8px;
+  padding: 8px;
+  background: rgba(7, 20, 37, 0.65);
+  font-size: 0.64rem;
+  line-height: 1.45;
+  color: #b8d6ea;
+}
+
+@keyframes missionLaunchIntro {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes missionLaunchLoad {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
 /* ============================================
    WINDOW: RÉALISATIONS (File Explorer)
    ============================================ */
@@ -4386,6 +4557,37 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   .mission-board-tip { font-size: 0.6rem; }
   .mission-board-nav-btn { width: 32px; height: 32px; font-size: 0.84rem; }
   .mission-board-nav-label { min-width: 126px; font-size: 0.55rem; padding: 3px 8px; }
+  .mission-board-launch { padding: 10px; }
+  .mission-launch-frame { padding: 12px; }
+  .mission-launch-kicker { font-size: 0.55rem; }
+  .mission-launch-title { font-size: 0.78rem; }
+  .mission-launch-status { font-size: 0.62rem; }
+  .mission-board-menu-screen { gap: 8px; }
+  .mission-board-menu-head { padding: 8px; }
+  .mission-board-menu-title { font-size: 0.66rem; }
+  .mission-board-menu-subtitle { font-size: 0.6rem; }
+  .mission-board-detail-topbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .mission-board-home-btn {
+    width: 100%;
+    border-radius: 8px;
+    font-size: 0.6rem;
+    padding: 6px 8px;
+  }
+  .mission-board-part-nav {
+    grid-template-columns: 32px 1fr 32px;
+    gap: 6px;
+  }
+  .mission-argument-list {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .mission-argument-item {
+    font-size: 0.58rem;
+    padding: 6px;
+  }
 
   /* ── Réalisations explorer mobile ── */
   .explorer-content { flex-direction:column; }
@@ -5687,10 +5889,25 @@ function getWindowContent(id) {
             </div>
           </div>
           <div class="mission-board-root" id="missionBoardRoot" tabindex="0" role="application" aria-label="Mission Board jeu video">
-            <div class="mission-board-lobby" aria-label="Selection de mode">
-              <button type="button" class="mission-board-nav-btn mode-nav" id="missionBoardPrevBtn" aria-label="Section precedente">←</button>
+            <div class="mission-board-launch" id="missionBoardLaunch" aria-live="polite">
+              <div class="mission-launch-frame">
+                <div class="mission-launch-kicker">TASK FORCE BOOT</div>
+                <div class="mission-launch-title">QUESTLINE // DEPLOIEMENT</div>
+                <div class="mission-launch-status" id="missionLaunchStatus">Initialisation des modules tactiques...</div>
+                <div class="mission-launch-bar">
+                  <div class="mission-launch-fill" id="missionLaunchFill"></div>
+                </div>
+              </div>
+            </div>
+
+            <section class="mission-board-menu-screen" id="missionBoardMenuScreen" aria-label="Selection de mode" hidden>
+              <div class="mission-board-menu-head">
+                <div class="mission-board-menu-title">CHOISIS TON MODE</div>
+                <div class="mission-board-menu-subtitle">Selectionne une section pour lancer la campagne QUESTLINE.</div>
+              </div>
+
               <div class="mission-board-menu" aria-label="Modes de jeu Mission Board">
-                <button type="button" class="mission-board-option active" data-board="quetes" aria-label="Option Quetes">
+                <button type="button" class="mission-board-option" data-board="quetes" aria-label="Option Quetes">
                   <span class="mission-option-kicker">MODE CAMPAGNE</span>
                   <span class="mission-option-label"><span class="mission-option-icon" aria-hidden="true">📜</span> Quetes</span>
                   <span class="mission-option-meta">Progression solo et objectifs techniques</span>
@@ -5706,28 +5923,41 @@ function getWindowContent(id) {
                   <span class="mission-option-meta">Journalieres, farming et quetes epiques</span>
                 </button>
               </div>
-              <button type="button" class="mission-board-nav-btn mode-nav" id="missionBoardNextBtn" aria-label="Section suivante">→</button>
-            </div>
-            <div class="mission-board-nav-label" id="missionBoardNavLabel">1/3 • Quetes</div>
 
-            <section class="mission-board-panel" aria-live="polite">
-              <div class="mission-board-panel-head">
-                <div>
-                  <div class="mission-board-title" id="missionBoardTitle">Quetes principales</div>
-                  <div class="mission-board-subtitle" id="missionBoardSubtitle">Selectionnez un objectif et suivez la progression.</div>
-                </div>
-                <div class="mission-board-rank" id="missionBoardRank">RANG BRONZE</div>
+              <div class="mission-board-tip">Clique un mode pour ouvrir la section, puis utilise les fleches pour avancer ou reculer.</div>
+            </section>
+
+            <section class="mission-board-detail-screen" id="missionBoardDetailScreen" aria-live="polite" hidden>
+              <div class="mission-board-detail-topbar">
+                <div class="mission-board-nav-label" id="missionBoardModeLabel">MODE • Quetes</div>
+                <button type="button" class="mission-board-home-btn" id="missionBoardHomeBtn" aria-label="Retour au menu">⌂ Home</button>
               </div>
 
-              <div class="mission-board-xp">
-                <div class="mission-board-xp-label" id="missionBoardXpLabel">Progression de campagne</div>
-                <div class="mission-board-xp-track">
-                  <div class="mission-board-xp-fill" id="missionBoardXpFill"></div>
+              <div class="mission-board-panel">
+                <div class="mission-board-panel-head">
+                  <div>
+                    <div class="mission-board-title" id="missionBoardTitle">Quetes principales</div>
+                    <div class="mission-board-subtitle" id="missionBoardSubtitle">Selectionnez un objectif et suivez la progression.</div>
+                  </div>
+                  <div class="mission-board-rank" id="missionBoardRank">RANG BRONZE</div>
                 </div>
-              </div>
 
-              <div class="mission-board-grid" id="missionBoardGrid"></div>
-              <div class="mission-board-tip" id="missionBoardTip">Conseil: utilisez les fleches pour changer de mode comme dans un lobby.</div>
+                <div class="mission-board-xp">
+                  <div class="mission-board-xp-label" id="missionBoardXpLabel">Progression de campagne</div>
+                  <div class="mission-board-xp-track">
+                    <div class="mission-board-xp-fill" id="missionBoardXpFill"></div>
+                  </div>
+                </div>
+
+                <div class="mission-board-part-nav" aria-label="Navigation des parties">
+                  <button type="button" class="mission-board-nav-btn" id="missionBoardPartPrevBtn" aria-label="Partie precedente">←</button>
+                  <div class="mission-board-nav-label" id="missionBoardPartLabel">1/1 • Partie</div>
+                  <button type="button" class="mission-board-nav-btn" id="missionBoardPartNextBtn" aria-label="Partie suivante">→</button>
+                </div>
+
+                <div class="mission-board-grid" id="missionBoardGrid"></div>
+                <div class="mission-board-tip" id="missionBoardTip">Conseil: utilisez les fleches pour parcourir les parties et arguments.</div>
+              </div>
             </section>
           </div>
         </div>
@@ -8293,6 +8523,16 @@ function initAproposEditor() {
   if (!win) return;
 
   const root = win.querySelector('#missionBoardRoot');
+  const launchEl = win.querySelector('#missionBoardLaunch');
+  const launchStatusEl = win.querySelector('#missionLaunchStatus');
+  const launchFillEl = win.querySelector('#missionLaunchFill');
+  const menuScreenEl = win.querySelector('#missionBoardMenuScreen');
+  const detailScreenEl = win.querySelector('#missionBoardDetailScreen');
+  const modeLabelEl = win.querySelector('#missionBoardModeLabel');
+  const homeBtn = win.querySelector('#missionBoardHomeBtn');
+  const partPrevBtn = win.querySelector('#missionBoardPartPrevBtn');
+  const partNextBtn = win.querySelector('#missionBoardPartNextBtn');
+  const partLabelEl = win.querySelector('#missionBoardPartLabel');
   const titleEl = win.querySelector('#missionBoardTitle');
   const subtitleEl = win.querySelector('#missionBoardSubtitle');
   const rankEl = win.querySelector('#missionBoardRank');
@@ -8300,11 +8540,8 @@ function initAproposEditor() {
   const xpFillEl = win.querySelector('#missionBoardXpFill');
   const gridEl = win.querySelector('#missionBoardGrid');
   const tipEl = win.querySelector('#missionBoardTip');
-  const prevNavBtn = win.querySelector('#missionBoardPrevBtn');
-  const nextNavBtn = win.querySelector('#missionBoardNextBtn');
-  const navLabelEl = win.querySelector('#missionBoardNavLabel');
   const options = win.querySelectorAll('.mission-board-option');
-  if (!root || !titleEl || !subtitleEl || !rankEl || !xpLabelEl || !xpFillEl || !gridEl || !tipEl || !prevNavBtn || !nextNavBtn || !navLabelEl || !options.length) return;
+  if (!root || !launchEl || !launchStatusEl || !launchFillEl || !menuScreenEl || !detailScreenEl || !modeLabelEl || !homeBtn || !partPrevBtn || !partNextBtn || !partLabelEl || !titleEl || !subtitleEl || !rankEl || !xpLabelEl || !xpFillEl || !gridEl || !tipEl || !options.length) return;
   if (root.dataset.initialized === '1') return;
   root.dataset.initialized = '1';
 
@@ -8317,7 +8554,7 @@ function initAproposEditor() {
       rank: 'RANG ETUDIANT-SYS',
       xpLabel: 'Progression Main Quest',
       progress: 81,
-      tip: 'Utilise les fleches du lobby pour changer de mode.',
+      tip: 'Utilise les fleches pour avancer ou reculer entre les parties.',
       groups: [
         {
           title: 'NARRATION PRINCIPALE',
@@ -8548,6 +8785,24 @@ function initAproposEditor() {
   };
 
   let currentBoard = 'quetes';
+  let currentPartIndex = 0;
+  const launchTimers = [];
+
+  function trackTimer(timer) {
+    launchTimers.push(timer);
+    return timer;
+  }
+
+  function clearLaunchTimers() {
+    while (launchTimers.length) {
+      clearTimeout(launchTimers.pop());
+    }
+  }
+
+  function safeLaunchUpdate(callback) {
+    if (!root.isConnected) return;
+    callback();
+  }
 
   function getBoardIndex(boardKey) {
     return boardOrder.indexOf(boardKey);
@@ -8570,114 +8825,271 @@ function initAproposEditor() {
     return boardKey;
   }
 
-  function goToRelativeBoard(step) {
-    const currentIndex = getBoardIndex(currentBoard);
-    if (currentIndex === -1) return;
-    const nextBoard = boardOrder[(currentIndex + step + boardOrder.length) % boardOrder.length];
-    renderBoard(nextBoard);
-  }
-
-  function renderBoard(boardKey) {
-    const data = boardData[boardKey];
-    if (!data) return;
-    currentBoard = boardKey;
-
+  function setMenuSelection(boardKey) {
     options.forEach(btn => {
       btn.classList.toggle('active', btn.dataset.board === boardKey);
     });
+  }
 
+  function getBoardParts(boardKey) {
+    const data = boardData[boardKey];
+    if (!data) return [];
+
+    if (Array.isArray(data.groups) && data.groups.length) {
+      return data.groups.map((group, index) => {
+        const entries = Array.isArray(group.entries) ? group.entries : [];
+        return {
+          title: group.title || `Partie ${index + 1}`,
+          description: group.description || 'Aucun detail supplementaire.',
+          entries,
+          arguments: entries.map(entry => entry.name).filter(Boolean)
+        };
+      });
+    }
+
+    const entries = Array.isArray(data.entries) ? data.entries : [];
+    return entries.map((entry, index) => ({
+      title: entry.name || `Partie ${index + 1}`,
+      description: entry.desc || 'Aucun detail supplementaire.',
+      entries: [entry],
+      arguments: [entry.zone, entry.statusLabel ? `Etat: ${entry.statusLabel}` : ''].filter(Boolean)
+    }));
+  }
+
+  function renderEntry(entry, idx) {
+    return `
+      <article class="mission-card" style="animation-delay:${idx * 50}ms;">
+        <div class="mission-card-head">
+          <div class="mission-card-name">
+            <span class="mission-card-icon" aria-hidden="true">${entry.icon}</span>
+            <span>${entry.name}</span>
+          </div>
+          <span class="mission-rarity ${getRarityClass(entry.rarity)}">${entry.rarity.toUpperCase()}</span>
+        </div>
+        <p class="mission-card-desc">${entry.desc}</p>
+        <div class="mission-card-meta">
+          <span>${entry.zone}</span>
+          <span class="mission-status ${getStatusClass(entry.status)}">${entry.statusLabel}</span>
+        </div>
+      </article>
+    `;
+  }
+
+  function renderCurrentPart() {
+    const data = boardData[currentBoard];
+    if (!data) return;
+
+    const parts = getBoardParts(currentBoard);
+    if (!parts.length) {
+      partLabelEl.textContent = '0/0 • Partie';
+      gridEl.innerHTML = `
+        <section class="mission-group mission-part-card">
+          <h3 class="mission-group-title">Aucune partie disponible</h3>
+          <p class="mission-group-desc">Ajoute des donnees dans boardData pour remplir cette section.</p>
+        </section>
+      `;
+      return;
+    }
+
+    if (currentPartIndex >= parts.length || currentPartIndex < 0) {
+      currentPartIndex = 0;
+    }
+
+    const part = parts[currentPartIndex];
+    const argumentsList = Array.isArray(part.arguments) ? part.arguments : [];
+    partLabelEl.textContent = `${currentPartIndex + 1}/${parts.length} • ${part.title}`;
+    tipEl.textContent = `${data.tip} Partie ${currentPartIndex + 1}/${parts.length}.`;
+
+    gridEl.innerHTML = `
+      <section class="mission-group mission-part-card" style="animation-delay:0ms;">
+        <h3 class="mission-group-title">${part.title}</h3>
+        <p class="mission-group-desc">${part.description}</p>
+        ${argumentsList.length ? `<ul class="mission-argument-list">${argumentsList.map(arg => `<li class="mission-argument-item">${arg}</li>`).join('')}</ul>` : ''}
+        <div class="mission-group-list">
+          ${(Array.isArray(part.entries) ? part.entries : []).map((entry, idx) => renderEntry(entry, idx)).join('')}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderBoard(boardKey, optionsState = {}) {
+    const data = boardData[boardKey];
+    if (!data) return;
+
+    currentBoard = boardKey;
+    if (!optionsState.keepPart) {
+      currentPartIndex = 0;
+    }
+
+    modeLabelEl.textContent = `MODE • ${getBoardName(boardKey)}`;
+    setMenuSelection(boardKey);
     titleEl.textContent = data.title;
     subtitleEl.textContent = data.subtitle;
     rankEl.textContent = data.rank;
     xpLabelEl.textContent = data.xpLabel;
-    tipEl.textContent = data.tip;
-    navLabelEl.textContent = `${getBoardIndex(boardKey) + 1}/3 • ${getBoardName(boardKey)}`;
 
     xpFillEl.style.width = '0%';
     requestAnimationFrame(() => {
       xpFillEl.style.width = `${data.progress}%`;
     });
 
-    function renderEntry(entry, idx) {
-      return `
-        <article class="mission-card" style="animation-delay:${idx * 50}ms;">
-          <div class="mission-card-head">
-            <div class="mission-card-name">
-              <span class="mission-card-icon" aria-hidden="true">${entry.icon}</span>
-              <span>${entry.name}</span>
-            </div>
-            <span class="mission-rarity ${getRarityClass(entry.rarity)}">${entry.rarity.toUpperCase()}</span>
-          </div>
-          <p class="mission-card-desc">${entry.desc}</p>
-          <div class="mission-card-meta">
-            <span>${entry.zone}</span>
-            <span class="mission-status ${getStatusClass(entry.status)}">${entry.statusLabel}</span>
-          </div>
-        </article>
-      `;
-    }
+    renderCurrentPart();
+  }
 
-    if (Array.isArray(data.groups) && data.groups.length) {
-      gridEl.innerHTML = data.groups.map((group, groupIndex) => {
-        const entries = Array.isArray(group.entries) ? group.entries : [];
-        return `
-          <section class="mission-group" style="animation-delay:${groupIndex * 60}ms;">
-            <h3 class="mission-group-title">${group.title || ''}</h3>
-            <p class="mission-group-desc">${group.description || ''}</p>
-            <div class="mission-group-list">
-              ${entries.map((entry, entryIndex) => renderEntry(entry, entryIndex)).join('')}
-            </div>
-          </section>
-        `;
-      }).join('');
-      return;
-    }
+  function showMenu() {
+    detailScreenEl.hidden = true;
+    menuScreenEl.hidden = false;
+    setMenuSelection(currentBoard);
+    const activeOption = Array.from(options).find(btn => btn.dataset.board === currentBoard) || options[0];
+    if (activeOption) activeOption.focus();
+  }
 
-    const entries = Array.isArray(data.entries) ? data.entries : [];
-    gridEl.innerHTML = entries.map((entry, idx) => renderEntry(entry, idx)).join('');
+  function openBoard(boardKey) {
+    if (!boardData[boardKey]) return;
+    menuScreenEl.hidden = true;
+    detailScreenEl.hidden = false;
+    renderBoard(boardKey);
+    setTimeout(() => {
+      if (root.isConnected) root.focus();
+    }, 10);
+  }
+
+  function goToRelativePart(step) {
+    const parts = getBoardParts(currentBoard);
+    if (!parts.length) return;
+    currentPartIndex = (currentPartIndex + step + parts.length) % parts.length;
+    renderCurrentPart();
+  }
+
+  function moveMenuSelection(step) {
+    const currentIndex = getBoardIndex(currentBoard);
+    if (currentIndex === -1) return;
+    const nextBoard = boardOrder[(currentIndex + step + boardOrder.length) % boardOrder.length];
+    currentBoard = nextBoard;
+    setMenuSelection(nextBoard);
+    const nextBtn = Array.from(options).find(btn => btn.dataset.board === nextBoard);
+    if (nextBtn) nextBtn.focus();
+  }
+
+  function finishLaunchSequence() {
+    safeLaunchUpdate(() => {
+      clearLaunchTimers();
+      launchEl.classList.add('hidden');
+      trackTimer(setTimeout(() => {
+        safeLaunchUpdate(() => {
+          launchEl.setAttribute('hidden', '');
+          showMenu();
+          root.focus();
+        });
+      }, 360));
+    });
+  }
+
+  function startLaunchSequence() {
+    launchEl.removeAttribute('hidden');
+    launchEl.classList.remove('hidden');
+    launchFillEl.classList.remove('active');
+    menuScreenEl.hidden = true;
+    detailScreenEl.hidden = true;
+    launchStatusEl.textContent = 'Initialisation des modules tactiques...';
+
+    requestAnimationFrame(() => {
+      launchFillEl.classList.add('active');
+    });
+
+    const launchSteps = [
+      { delay: 420, text: 'Synchronisation des escouades QUESTLINE...' },
+      { delay: 900, text: 'Chargement des theatres d operations...' },
+      { delay: 1400, text: 'Systeme pret. Ouverture du lobby...' }
+    ];
+
+    launchSteps.forEach(step => {
+      trackTimer(setTimeout(() => {
+        safeLaunchUpdate(() => {
+          launchStatusEl.textContent = step.text;
+        });
+      }, step.delay));
+    });
+
+    trackTimer(setTimeout(() => {
+      finishLaunchSequence();
+    }, 1820));
   }
 
   options.forEach(btn => {
     btn.addEventListener('click', () => {
       const boardKey = btn.dataset.board;
-      if (!boardKey || boardKey === currentBoard) return;
-      renderBoard(boardKey);
+      if (!boardKey) return;
+      openBoard(boardKey);
     });
   });
 
-  prevNavBtn.addEventListener('click', () => goToRelativeBoard(-1));
-  nextNavBtn.addEventListener('click', () => goToRelativeBoard(1));
+  partPrevBtn.addEventListener('click', () => goToRelativePart(-1));
+  partNextBtn.addEventListener('click', () => goToRelativePart(1));
+  homeBtn.addEventListener('click', () => showMenu());
 
   root.addEventListener('keydown', e => {
+    if (!launchEl.hasAttribute('hidden')) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        finishLaunchSequence();
+      }
+      return;
+    }
+
     if (e.key === '1') {
       e.preventDefault();
-      renderBoard('quetes');
+      openBoard('quetes');
       return;
     }
     if (e.key === '2') {
       e.preventDefault();
-      renderBoard('guilde');
+      openBoard('guilde');
       return;
     }
     if (e.key === '3') {
       e.preventDefault();
-      renderBoard('missions');
+      openBoard('missions');
       return;
     }
 
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      e.preventDefault();
-      goToRelativeBoard(1);
+    if (!detailScreenEl.hidden) {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        goToRelativePart(1);
+        return;
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        goToRelativePart(-1);
+        return;
+      }
+      if (e.key === 'Home' || e.key === 'Escape' || e.key.toLowerCase() === 'h') {
+        e.preventDefault();
+        showMenu();
+      }
       return;
     }
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      goToRelativeBoard(-1);
+
+    if (!menuScreenEl.hidden) {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        moveMenuSelection(1);
+        return;
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        moveMenuSelection(-1);
+        return;
+      }
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openBoard(currentBoard);
+      }
     }
   });
 
-  renderBoard(currentBoard);
-  setTimeout(() => root.focus(), 10);
+  startLaunchSequence();
 }
 
 // ============================
