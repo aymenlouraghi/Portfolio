@@ -675,12 +675,17 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   box-shadow: 0 12px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,212,255,0.1);
 }
 .os-window.minimized {
-  transform: translateY(calc(100vh + 64px)) scale(0.1);
-  opacity:0;
+  /* Force hidden state even if opening animation fill-mode is still applied */
+  animation: none !important;
+  transform: translateY(calc(100vh + 64px)) scale(0.1) !important;
+  opacity: 0 !important;
+  visibility: hidden;
   pointer-events:none;
+  z-index: 1 !important;
   transition: transform 0.35s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.25s ease;
 }
 .os-window:not(.minimized) {
+  visibility: visible;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, box-shadow 0.2s;
 }
 .os-window.maximized {
@@ -8217,7 +8222,21 @@ function minimizeWindow(id) {
   const win = getWindowElement(id);
   if (!win) return;
   if (win.dataset.closing === '1') return;
+  win.classList.remove('focused');
   win.classList.add('minimized');
+
+  // Give focus to the next visible window, if any.
+  const nextId = [...state.windowOrder].reverse().find(wid => {
+    if (wid === id) return false;
+    const candidate = getWindowElement(wid);
+    return candidate && candidate.isConnected && candidate.dataset.closing !== '1' && !candidate.classList.contains('minimized');
+  });
+
+  if (nextId) {
+    focusWindow(nextId);
+    return;
+  }
+
   updateTaskbar();
 }
 
