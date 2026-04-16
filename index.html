@@ -1801,6 +1801,49 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   color: #e8f9ff;
   letter-spacing: 0.6px;
 }
+.mission-photo-media {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.mission-photo-frame,
+.mission-photo-image {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: clamp(200px, 40vh, 460px);
+  border: 1px solid rgba(167, 220, 255, 0.35);
+  border-radius: 10px;
+  background: rgba(8, 18, 34, 0.9);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.mission-photo-image {
+  object-fit: contain;
+}
+.mission-photo-caption {
+  margin-top: -2px;
+  text-align: right;
+  font-size: 0.7rem;
+  color: #a4c5db;
+  font-family: var(--font-mono);
+}
+.mission-photo-open-btn {
+  align-self: flex-end;
+  border: 1px solid rgba(167, 220, 255, 0.4);
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  color: #d8f0ff;
+  background: linear-gradient(180deg, rgba(20, 45, 78, 0.9), rgba(12, 27, 49, 0.95));
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.mission-photo-open-btn:hover {
+  border-color: rgba(180, 231, 255, 0.7);
+  transform: translateY(-1px);
+}
 .mission-board-grid > .mission-group {
   margin-bottom: 0;
 }
@@ -4730,6 +4773,17 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   }
   .mission-photo-placeholder { font-size: 0.66rem; }
   .mission-photo-placeholder strong { font-size: 0.7rem; }
+  .mission-photo-frame,
+  .mission-photo-image {
+    min-height: 34vh;
+  }
+  .mission-photo-caption {
+    font-size: 0.62rem;
+  }
+  .mission-photo-open-btn {
+    font-size: 0.6rem;
+    padding: 6px 8px;
+  }
   .mission-argument-list {
     grid-template-columns: 1fr;
     gap: 6px;
@@ -8925,6 +8979,18 @@ function initAproposEditor() {
     }
   };
 
+  const boardMediaFiles = {
+    quetes: ['1.pdf', '2.pdf', '3.pdf', '4.2.pdf', '5.pdf', '6.pdf'],
+    guilde: ['1.pdf', '2.pdf', '3.pdf', '4.pdf', '5.pdf'],
+    missions: []
+  };
+
+  const boardMediaFolders = {
+    quetes: 'Quetes',
+    guilde: 'Guilde',
+    missions: 'Missions'
+  };
+
   let currentBoard = 'quetes';
   let currentArgumentIndex = 0;
   const launchTimers = [];
@@ -8964,6 +9030,68 @@ function initAproposEditor() {
     if (boardKey === 'guilde') return 'Guilde';
     if (boardKey === 'missions') return 'Missions';
     return boardKey;
+  }
+
+  function getBoardMediaFile(boardKey, argumentIndex) {
+    const files = boardMediaFiles[boardKey];
+    const folder = boardMediaFolders[boardKey];
+    if (!Array.isArray(files) || !folder) return null;
+    const fileName = files[argumentIndex];
+    if (!fileName) return null;
+    return {
+      fileName,
+      fileUrl: `docs/${folder}/${encodeURIComponent(fileName)}`
+    };
+  }
+
+  function getFileExtension(fileName) {
+    return (String(fileName || '').split('.').pop() || '').toLowerCase();
+  }
+
+  function escapeSingleQuotes(value) {
+    return String(value || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  }
+
+  function renderMissionPhotoZone(boardKey, argumentIndex) {
+    const media = getBoardMediaFile(boardKey, argumentIndex);
+    if (!media) {
+      return `
+        <div class="mission-photo-placeholder">
+          <strong>Zone image ${argumentIndex + 1}</strong>
+          <span>Ajoute une photo pour cette partie ici.</span>
+        </div>
+      `;
+    }
+
+    const boardName = getBoardName(boardKey);
+    const extension = getFileExtension(media.fileName);
+    const safeUrl = escapeSingleQuotes(media.fileUrl);
+    const safeName = escapeSingleQuotes(media.fileName);
+
+    if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'avif'].includes(extension)) {
+      return `
+        <figure class="mission-photo-media">
+          <img class="mission-photo-image" src="${media.fileUrl}" alt="Illustration ${boardName} ${argumentIndex + 1}" loading="lazy">
+          <figcaption class="mission-photo-caption">${boardName} • Page ${argumentIndex + 1}</figcaption>
+        </figure>
+      `;
+    }
+
+    if (extension === 'pdf') {
+      return `
+        <div class="mission-photo-media">
+          <iframe class="mission-photo-frame" src="${media.fileUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH" title="Apercu ${boardName} ${argumentIndex + 1}" loading="lazy"></iframe>
+          <button type="button" class="mission-photo-open-btn" onclick="openDocViewer('${safeUrl}', '📄', '${safeName}')">📄 Ouvrir ${media.fileName}</button>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="mission-photo-placeholder">
+        <strong>${media.fileName}</strong>
+        <span>Fichier trouve, mais type non pris en charge pour l apercu integre.</span>
+      </div>
+    `;
   }
 
   function setMenuSelection(boardKey) {
@@ -9064,10 +9192,7 @@ function initAproposEditor() {
         <p class="mission-full-text">${entryDesc}</p>
         ${chapterDesc ? `<p class="mission-full-text mission-full-subtext">${chapter} — ${chapterDesc}</p>` : `<p class="mission-full-text mission-full-subtext">${chapter}</p>`}
         <div class="mission-photo-zone">
-          <div class="mission-photo-placeholder">
-            <strong>Zone image ${currentArgumentIndex + 1}</strong>
-            <span>Ajoute une photo pour cette partie ici.</span>
-          </div>
+          ${renderMissionPhotoZone(currentBoard, currentArgumentIndex)}
         </div>
       </section>
     `;
