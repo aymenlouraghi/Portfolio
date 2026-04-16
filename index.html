@@ -1807,19 +1807,30 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow: hidden;
 }
 .mission-photo-frame,
-.mission-photo-image {
+.mission-photo-image,
+.mission-photo-canvas {
   width: 100%;
   flex: 1 1 auto;
   min-height: clamp(200px, 40vh, 460px);
-  border: 1px solid rgba(167, 220, 255, 0.35);
   border-radius: 10px;
+}
+.mission-photo-frame,
+.mission-photo-image {
+  border: 1px solid rgba(167, 220, 255, 0.35);
   background: rgba(8, 18, 34, 0.9);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
 }
+.mission-photo-canvas {
+  display: block;
+  border: 1px solid rgba(167, 220, 255, 0.35);
+  background: rgba(8, 18, 34, 0.9);
+}
 .mission-photo-image {
-  object-fit: contain;
+  object-fit: cover;
+  object-position: center center;
 }
 .mission-photo-caption {
   margin-top: -2px;
@@ -1828,21 +1839,26 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   color: #a4c5db;
   font-family: var(--font-mono);
 }
-.mission-photo-open-btn {
-  align-self: flex-end;
-  border: 1px solid rgba(167, 220, 255, 0.4);
-  border-radius: 8px;
-  padding: 7px 10px;
-  font-size: 0.68rem;
+.mission-photo-loading,
+.mission-photo-error {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: clamp(200px, 40vh, 460px);
+  border: 1px dashed rgba(167, 220, 255, 0.35);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
   font-family: var(--font-mono);
-  color: #d8f0ff;
-  background: linear-gradient(180deg, rgba(20, 45, 78, 0.9), rgba(12, 27, 49, 0.95));
-  cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  font-size: 0.72rem;
+  color: #b9d9ee;
+  background: rgba(8, 18, 34, 0.65);
 }
-.mission-photo-open-btn:hover {
-  border-color: rgba(180, 231, 255, 0.7);
-  transform: translateY(-1px);
+.mission-photo-error {
+  color: #ffc3c3;
+  border-color: rgba(255, 159, 159, 0.45);
 }
 .mission-board-grid > .mission-group {
   margin-bottom: 0;
@@ -4774,15 +4790,14 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   .mission-photo-placeholder { font-size: 0.66rem; }
   .mission-photo-placeholder strong { font-size: 0.7rem; }
   .mission-photo-frame,
-  .mission-photo-image {
+  .mission-photo-image,
+  .mission-photo-canvas,
+  .mission-photo-loading,
+  .mission-photo-error {
     min-height: 34vh;
   }
   .mission-photo-caption {
     font-size: 0.62rem;
-  }
-  .mission-photo-open-btn {
-    font-size: 0.6rem;
-    padding: 6px 8px;
   }
   .mission-argument-list {
     grid-template-columns: 1fr;
@@ -9048,8 +9063,110 @@ function initAproposEditor() {
     return (String(fileName || '').split('.').pop() || '').toLowerCase();
   }
 
-  function escapeSingleQuotes(value) {
-    return String(value || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  let missionPdfJsPromise = null;
+
+  function ensureMissionPdfJs() {
+    if (window.pdfjsLib) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+      return Promise.resolve(window.pdfjsLib);
+    }
+    if (missionPdfJsPromise) return missionPdfJsPromise;
+
+    missionPdfJsPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js';
+      script.onload = () => {
+        if (!window.pdfjsLib) {
+          reject(new Error('pdf.js non charge'));
+          return;
+        }
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+        resolve(window.pdfjsLib);
+      };
+      script.onerror = () => reject(new Error('Impossible de charger pdf.js'));
+      document.head.appendChild(script);
+    });
+
+    return missionPdfJsPromise;
+  }
+
+  async function renderPdfPreviewInZone(hostEl, pdfUrl) {
+    const pdfjs = await ensureMissionPdfJs();
+    const bounds = hostEl.getBoundingClientRect();
+    const cssWidth = Math.max(320, Math.round(bounds.width) || 900);
+    const cssHeight = Math.max(220, Math.round(bounds.height) || 500);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const targetWidth = Math.max(1, Math.floor(cssWidth * dpr));
+    const targetHeight = Math.max(1, Math.floor(cssHeight * dpr));
+
+    const loadingTask = pdfjs.getDocument({ url: pdfUrl });
+    let pdfDoc = null;
+
+    try {
+      pdfDoc = await loadingTask.promise;
+      const page = await pdfDoc.getPage(1);
+      const baseViewport = page.getViewport({ scale: 1 });
+      const framingZoom = 1.12;
+      const coverScale = Math.max(targetWidth / baseViewport.width, targetHeight / baseViewport.height) * framingZoom;
+      const renderViewport = page.getViewport({ scale: coverScale });
+
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = Math.max(1, Math.ceil(renderViewport.width));
+      tempCanvas.height = Math.max(1, Math.ceil(renderViewport.height));
+
+      const tempCtx = tempCanvas.getContext('2d', { alpha: false });
+      if (!tempCtx) throw new Error('Canvas indisponible');
+
+      await page.render({
+        canvasContext: tempCtx,
+        viewport: renderViewport
+      }).promise;
+
+      const outputCanvas = document.createElement('canvas');
+      outputCanvas.className = 'mission-photo-canvas';
+      outputCanvas.width = targetWidth;
+      outputCanvas.height = targetHeight;
+
+      const outputCtx = outputCanvas.getContext('2d', { alpha: false });
+      if (!outputCtx) throw new Error('Canvas indisponible');
+
+      const sx = Math.max(0, Math.floor((tempCanvas.width - targetWidth) / 2));
+      const sy = Math.max(0, Math.floor((tempCanvas.height - targetHeight) / 2));
+
+      outputCtx.drawImage(
+        tempCanvas,
+        sx,
+        sy,
+        Math.min(targetWidth, tempCanvas.width),
+        Math.min(targetHeight, tempCanvas.height),
+        0,
+        0,
+        targetWidth,
+        targetHeight
+      );
+
+      if (!hostEl.isConnected) return;
+      hostEl.innerHTML = '';
+      hostEl.appendChild(outputCanvas);
+      page.cleanup();
+    } finally {
+      if (pdfDoc && typeof pdfDoc.cleanup === 'function') pdfDoc.cleanup();
+      if (loadingTask && typeof loadingTask.destroy === 'function') loadingTask.destroy();
+    }
+  }
+
+  function hydrateMissionPhotoPreviews() {
+    const pdfSlots = root.querySelectorAll('.mission-photo-pdf-media[data-mission-pdf]:not([data-rendered="1"])');
+    pdfSlots.forEach(slot => {
+      slot.dataset.rendered = '1';
+      const pdfUrl = slot.dataset.missionPdf;
+      if (!pdfUrl) return;
+
+      renderPdfPreviewInZone(slot, pdfUrl).catch(() => {
+        if (!slot.isConnected) return;
+        slot.innerHTML = '<div class="mission-photo-error">Apercu indisponible pour cette page.</div>';
+      });
+    });
   }
 
   function renderMissionPhotoZone(boardKey, argumentIndex) {
@@ -9065,8 +9182,6 @@ function initAproposEditor() {
 
     const boardName = getBoardName(boardKey);
     const extension = getFileExtension(media.fileName);
-    const safeUrl = escapeSingleQuotes(media.fileUrl);
-    const safeName = escapeSingleQuotes(media.fileName);
 
     if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'avif'].includes(extension)) {
       return `
@@ -9079,9 +9194,8 @@ function initAproposEditor() {
 
     if (extension === 'pdf') {
       return `
-        <div class="mission-photo-media">
-          <iframe class="mission-photo-frame" src="${media.fileUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH" title="Apercu ${boardName} ${argumentIndex + 1}" loading="lazy"></iframe>
-          <button type="button" class="mission-photo-open-btn" onclick="openDocViewer('${safeUrl}', '📄', '${safeName}')">📄 Ouvrir ${media.fileName}</button>
+        <div class="mission-photo-media mission-photo-pdf-media" data-mission-pdf="${media.fileUrl}">
+          <div class="mission-photo-loading">Chargement de l image ${boardName} ${argumentIndex + 1}...</div>
         </div>
       `;
     }
@@ -9196,6 +9310,11 @@ function initAproposEditor() {
         </div>
       </section>
     `;
+
+    requestAnimationFrame(() => {
+      if (!root.isConnected) return;
+      hydrateMissionPhotoPreviews();
+    });
   }
 
   function renderBoard(boardKey) {
