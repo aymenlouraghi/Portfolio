@@ -6560,7 +6560,24 @@ function getWindowContent(id) {
       icon: '📊',
       width: 920, height: 600,
       content: `
-        <div class="synthese-container"></div>
+        <div class="synthese-container">
+          <div class="doc-viewer">
+            <div class="doc-viewer-toolbar">
+              <span class="doc-viewer-title">📊 BTS SIO Fiche réalisation.pdf</span>
+              <div class="doc-viewer-actions">
+                <button class="doc-viewer-btn" onclick="openDocumentInNewTab('docs/Synth%C3%A8se%20E4/BTS%20SIO%20Fiche%20r%C3%A9alisation.pdf', 'BTS SIO Fiche réalisation.pdf')">🔗 Nouvel onglet</button>
+                <button class="doc-viewer-btn primary" onclick="downloadDoc('docs/Synth%C3%A8se%20E4/BTS%20SIO%20Fiche%20r%C3%A9alisation.pdf', 'BTS SIO Fiche réalisation.pdf')">⬇️ Télécharger</button>
+              </div>
+            </div>
+            <iframe class="doc-viewer-frame" src="docs/Synth%C3%A8se%20E4/BTS%20SIO%20Fiche%20r%C3%A9alisation.pdf" title="BTS SIO Fiche réalisation" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"></iframe>
+            <div class="doc-viewer-fallback" style="display:none;">
+              <div class="doc-viewer-fallback-icon">📊</div>
+              <div class="doc-viewer-fallback-title">BTS SIO Fiche réalisation.pdf</div>
+              <div class="doc-viewer-fallback-text">Le fichier PDF n'a pas pu être affiché dans cette fenêtre.<br>Utilisez les boutons ci-dessus pour l'ouvrir ou le télécharger.</div>
+              <button class="doc-viewer-btn primary" onclick="openDocumentInNewTab('docs/Synth%C3%A8se%20E4/BTS%20SIO%20Fiche%20r%C3%A9alisation.pdf', 'BTS SIO Fiche réalisation.pdf')" style="margin-top:0.5rem;">🔗 Ouvrir dans un nouvel onglet</button>
+            </div>
+          </div>
+        </div>
       `
     },
     veille: {
@@ -6568,7 +6585,24 @@ function getWindowContent(id) {
       icon: '📡',
       width: 780, height: 560,
       content: `
-        <div class="veille-container"></div>
+        <div class="veille-container">
+          <div class="doc-viewer">
+            <div class="doc-viewer-toolbar">
+              <span class="doc-viewer-title">📡 TP Veille stratégique.pdf</span>
+              <div class="doc-viewer-actions">
+                <button class="doc-viewer-btn" onclick="openDocumentInNewTab('docs/Veille/TP%20Veille%20strat%C3%A9gique.pdf', 'TP Veille stratégique.pdf')">🔗 Nouvel onglet</button>
+                <button class="doc-viewer-btn primary" onclick="downloadDoc('docs/Veille/TP%20Veille%20strat%C3%A9gique.pdf', 'TP Veille stratégique.pdf')">⬇️ Télécharger</button>
+              </div>
+            </div>
+            <iframe class="doc-viewer-frame" src="docs/Veille/TP%20Veille%20strat%C3%A9gique.pdf" title="TP Veille stratégique" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"></iframe>
+            <div class="doc-viewer-fallback" style="display:none;">
+              <div class="doc-viewer-fallback-icon">📡</div>
+              <div class="doc-viewer-fallback-title">TP Veille stratégique.pdf</div>
+              <div class="doc-viewer-fallback-text">Le fichier PDF n'a pas pu être affiché dans cette fenêtre.<br>Utilisez les boutons ci-dessus pour l'ouvrir ou le télécharger.</div>
+              <button class="doc-viewer-btn primary" onclick="openDocumentInNewTab('docs/Veille/TP%20Veille%20strat%C3%A9gique.pdf', 'TP Veille stratégique.pdf')" style="margin-top:0.5rem;">🔗 Ouvrir dans un nouvel onglet</button>
+            </div>
+          </div>
+        </div>
       `
     },
     attestations: {
