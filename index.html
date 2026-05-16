@@ -2617,172 +2617,6 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
 .contact-link-icon { font-size:1.1rem; }
 
 /* ============================================
-   WINDOW: PROJETS (Tableau de bord)
-   ============================================ */
-.projets-container {
-  height:100%; display:flex; flex-direction:column;
-}
-.projets-tabs {
-  display:flex;
-  background: rgba(0,0,0,0.2);
-  border-bottom: 1px solid var(--border);
-  padding: 0 8px;
-  gap:0;
-}
-.projets-tab {
-  padding: 10px 20px;
-  font-size:0.8rem;
-  color: var(--text-muted);
-  cursor:pointer;
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
-  display:flex; align-items:center; gap:6px;
-  font-family: var(--font);
-  background:transparent;
-  border-top:none; border-left:none; border-right:none;
-}
-.projets-tab:hover { color: var(--text); background: rgba(255,255,255,0.04); }
-.projets-tab.active {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
-  background: rgba(0,212,255,0.05);
-}
-.projets-tab-count {
-  font-size:0.65rem;
-  background: rgba(255,255,255,0.1);
-  padding: 1px 7px;
-  border-radius:10px;
-  color: var(--text-muted);
-}
-
-.projets-panel {
-  flex:1; overflow:auto;
-  display:none;
-  padding: 1.2rem;
-}
-.projets-panel.active { display:block; }
-
-.projets-category {
-  margin-bottom: 1.5rem;
-}
-.projets-category-header {
-  display:flex; align-items:center; gap:8px;
-  margin-bottom: 0.8rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-.projets-category-icon { font-size:1.1rem; }
-.projets-category-title {
-  font-size:0.82rem; font-weight:600;
-  color: var(--text-bright);
-}
-.projets-category-count {
-  font-size:0.68rem;
-  color: var(--text-muted);
-  margin-left:auto;
-}
-
-.projet-card {
-  display:flex; gap:14px;
-  padding: 12px 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,0.02);
-  margin-bottom: 8px;
-  cursor:pointer;
-  transition: border-color 0.2s, background 0.2s, transform 0.15s;
-  position:relative;
-  overflow:hidden;
-}
-.projet-card:hover {
-  border-color: rgba(0,212,255,0.3);
-  background: rgba(0,212,255,0.04);
-  transform: translateX(4px);
-}
-.projet-card-icon {
-  font-size:1.8rem;
-  min-width:40px;
-  display:flex; align-items:flex-start; justify-content:center;
-  padding-top:2px;
-}
-.projet-card-body { flex:1; min-width:0; }
-.projet-card-title {
-  font-size:0.85rem; font-weight:600;
-  color: var(--text-bright);
-  margin-bottom:3px;
-  display:flex; align-items:center; gap:8px;
-}
-.projet-card-context {
-  font-size:0.68rem;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-weight:500;
-}
-.projet-card-context.ecole {
-  background: rgba(187,134,252,0.15);
-  color: var(--accent-purple);
-}
-.projet-card-context.entreprise {
-  background: rgba(0,212,255,0.15);
-  color: var(--primary);
-}
-.projet-card-context.perso {
-  background: rgba(0,230,118,0.15);
-  color: var(--accent-green);
-}
-.projet-card-desc {
-  font-size:0.75rem;
-  color: var(--text-muted);
-  line-height:1.5;
-  margin-bottom:6px;
-}
-.projet-card-footer {
-  display:flex; align-items:center; gap:6px;
-  flex-wrap:wrap;
-}
-.projet-card-tag {
-  font-size:0.65rem;
-  padding: 2px 8px;
-  border-radius:8px;
-  background: rgba(255,255,255,0.06);
-  color: var(--text-muted);
-  border: 1px solid rgba(255,255,255,0.06);
-}
-.projet-card-date {
-  font-size:0.65rem;
-  color: var(--text-muted);
-  margin-left:auto;
-  opacity:0.7;
-}
-
-.projet-card-status {
-  position:absolute;
-  top:0; right:0;
-  width:8px; height:8px;
-  border-radius:50%;
-  margin:12px;
-}
-.projet-card-status.done { background: var(--accent-green); }
-.projet-card-status.progress { background: var(--accent-yellow); }
-.projet-card-status.planned { background: var(--text-muted); }
-
-/* Competences E4 badges */
-.projet-card-competences {
-  display:flex; flex-wrap:wrap; gap:4px;
-  margin-bottom:6px;
-}
-.projet-card-comp {
-  font-size:0.62rem;
-  padding: 2px 8px;
-  border-radius:10px;
-  background: rgba(255,152,0,0.15);
-  color: var(--accent-orange);
-  font-weight:600;
-  cursor:help;
-  border: 1px solid rgba(255,152,0,0.2);
-}
-
-/* ============================================
    WINDOW: TABLEAU DE SYNTHÈSE E4
    ============================================ */
 .synthese-container {
@@ -3006,22 +2840,6 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
 .attestation-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 16px rgba(0,212,255,0.3);
-}
-
-.projets-legend {
-  display:flex; gap:16px;
-  padding: 8px 14px;
-  background: rgba(0,0,0,0.15);
-  border-top: 1px solid var(--border);
-  font-size:0.68rem;
-  color: var(--text-muted);
-}
-.projets-legend-item {
-  display:flex; align-items:center; gap:5px;
-}
-.projets-legend-dot {
-  width:6px; height:6px;
-  border-radius:50%;
 }
 
 /* ============================================
@@ -4939,18 +4757,6 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   .contact-links { gap:4px; }
   .contact-link { padding:5px 8px; font-size:0.68rem; }
 
-  /* ── Projets mobile ── */
-  .projets-tabs { overflow-x:auto; scrollbar-width:none; flex-wrap:nowrap; }
-  .projets-tabs::-webkit-scrollbar { display:none; }
-  .projets-tab { padding:8px 12px; font-size:0.72rem; white-space:nowrap; }
-  .projet-card { flex-direction:column; gap:8px; padding:10px; }
-  .projet-card-icon { min-width:auto; font-size:1.5rem; }
-  .projet-card-title { font-size:0.78rem; flex-wrap:wrap; }
-  .projet-card-desc { font-size:0.7rem; }
-  .projet-card-footer { gap:4px; }
-  .projet-card-tag { font-size:0.6rem; padding:2px 6px; }
-  .projets-legend { font-size:0.62rem; gap:10px; padding:6px 10px; }
-
   /* ── Terminal mobile ── */
   .terminal-output { font-size:0.72rem; padding:8px; line-height:1.5; }
   .terminal-input-line { padding:4px 8px; gap:4px; }
@@ -5051,10 +4857,6 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
       <div class="desktop-icon-img">📁</div>
       <div class="desktop-icon-label">Réalisations</div>
     </div>
-    <div class="desktop-icon" data-window="projets" ondblclick="openWindow('projets')">
-      <div class="desktop-icon-img">📂</div>
-      <div class="desktop-icon-label">Projets</div>
-    </div>
     <div class="desktop-icon" data-window="contact" ondblclick="openWindow('contact')">
       <div class="desktop-icon-img">📨</div>
       <div class="desktop-icon-label">Contact</div>
@@ -5100,7 +4902,6 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
     <button class="taskbar-btn" onclick="openWindow('accueil')" title="Accueil">🌐</button>
     <button class="taskbar-btn" onclick="openWindow('apropos')" title="À Propos">📝</button>
     <button class="taskbar-btn" onclick="openWindow('realisations')" title="Réalisations">📁</button>
-    <button class="taskbar-btn" onclick="openWindow('projets')" title="Projets">📂</button>
     <button class="taskbar-btn" onclick="openWindow('contact')" title="Contact">📨</button>
     <button class="taskbar-btn" onclick="openWindow('terminal')" title="Terminal">⬛</button>
     <button class="taskbar-btn" onclick="openWindow('scolarite')" title="Scolarité">🎓</button>
@@ -5169,10 +4970,6 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
       <div class="start-app-icon">📁</div>
       <div class="start-app-label">Réalisations</div>
     </div>
-    <div class="start-app" onclick="openWindow('projets'); toggleStartMenu();">
-      <div class="start-app-icon">📂</div>
-      <div class="start-app-label">Projets</div>
-    </div>
     <div class="start-app" onclick="openWindow('contact'); toggleStartMenu();">
       <div class="start-app-icon">📨</div>
       <div class="start-app-label">Contact</div>
@@ -5221,7 +5018,6 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   <div class="context-menu-item" role="menuitem" onclick="openWindow('accueil')">🌐  Ouvrir Accueil</div>
   <div class="context-menu-item" role="menuitem" onclick="openWindow('apropos')">📝  Ouvrir À Propos</div>
   <div class="context-menu-item" role="menuitem" onclick="openWindow('realisations')">📁  Ouvrir Réalisations</div>
-  <div class="context-menu-item" role="menuitem" onclick="openWindow('projets')">📂  Ouvrir Projets</div>
   <div class="context-menu-separator" role="separator"></div>
   <div class="context-menu-submenu">
     <div class="context-menu-label">🖼️  Fond d'écran</div>
@@ -5362,23 +5158,20 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   4) Changer l'arborescence Scolarite et les fichiers:
     -> objet scolariteData
 
-  5) Changer les projets E4 / Synthese:
-    -> tableau projetsData[] et competencesE4
-
-  6) Changer email destinataire + liens contact:
+  5) Changer email destinataire + liens contact:
     -> template getWindowContent('contact')
     -> fetch FormSubmit dans handleContactSubmit()
 
-  7) Changer commandes terminal:
+  6) Changer commandes terminal:
     -> objet commands dans processCommand()
 
-  8) Changer couleurs globales:
+  7) Changer couleurs globales:
     -> variables CSS :root + ACCENT_COLORS
 
-  9) Changer positions icones bureau:
+  8) Changer positions icones bureau:
     -> DEFAULT_GRID_POSITIONS dans initDesktopIcons()
 
-  10) Desactiver la sequence "tentative d'intrusion":
+  9) Desactiver la sequence "tentative d'intrusion":
     -> retirer le bouton qui appelle triggerIntrusionShowcase()
 */
 // ============================
@@ -5837,7 +5630,6 @@ function getWindowIdFromTaskbarTitle(title) {
     'Accueil': 'accueil',
     'À Propos': 'apropos',
     'Réalisations': 'realisations',
-    'Projets': 'projets',
     'Contact': 'contact',
     'Terminal': 'terminal',
     'Scolarité': 'scolarite',
@@ -6412,28 +6204,6 @@ function getWindowContent(id) {
               </div>
               <div class="parcours-year" id="parcoursDialogYear">--- </div>
             </div>
-          </div>
-        </div>
-      `
-    },
-    projets: {
-      title: 'Projets — Tableau de bord',
-      icon: '📂',
-      width: 880, height: 600,
-      content: `
-        <!-- BTS: Onglets filtrés automatiquement depuis projetsData (ecole/entreprise/perso). -->
-        <div class="projets-container">
-          <div class="projets-tabs">
-            <button class="projets-tab active" onclick="switchProjetTab(this, 'all')">📋 Tout <span class="projets-tab-count" id="countAll">0</span></button>
-            <button class="projets-tab" onclick="switchProjetTab(this, 'ecole')">🎓 École <span class="projets-tab-count" id="countEcole">0</span></button>
-            <button class="projets-tab" onclick="switchProjetTab(this, 'entreprise')">🏢 Entreprise <span class="projets-tab-count" id="countEntreprise">0</span></button>
-            <button class="projets-tab" onclick="switchProjetTab(this, 'perso')">🏠 Personnel <span class="projets-tab-count" id="countPerso">0</span></button>
-          </div>
-          <div class="projets-panel active" id="projetsContent"></div>
-          <div class="projets-legend">
-            <div class="projets-legend-item"><div class="projets-legend-dot" style="background:var(--accent-green)"></div> Terminé</div>
-            <div class="projets-legend-item"><div class="projets-legend-dot" style="background:var(--accent-yellow)"></div> En cours</div>
-            <div class="projets-legend-item"><div class="projets-legend-dot" style="background:var(--text-muted)"></div> Planifié</div>
           </div>
         </div>
       `
@@ -7327,246 +7097,6 @@ function downloadDoc(url, name) {
       a.click();
       document.body.removeChild(a);
     });
-}
-
-// ============================
-// PROJETS DATA & LOGIC
-// ============================
-// Référentiel des compétences E4 (bloc "Support et mise à disposition de services informatiques")
-const competencesE4 = {
-  // BTS: Dictionnaire code -> libelle. Utilise ces codes dans projetsData[].competences
-  'C1': 'Gérer le patrimoine informatique',
-  'C2': 'Répondre aux incidents et aux demandes d\'assistance et d\'évolution',
-  'C3': 'Développer la présence en ligne de l\'organisation',
-  'C4': 'Travailler en mode projet',
-  'C5': 'Mettre à disposition des utilisateurs un service informatique',
-  'C6': 'Organiser son développement professionnel'
-};
-
-const projetsData = [
-  // BTS: Tableau principal de la fenêtre "Projets" et du tableau "Synthèse E4".
-  // ─── 🎓 ÉCOLE ───
-  {
-    icon: '🌐', title: 'Configuration Réseau Cisco',
-    context: 'ecole', category: 'Réseau & Télécom',
-    desc: 'Travaux pratiques de configuration de routeurs et switchs Cisco : VLAN, routage inter-VLAN, ACL, NAT/PAT, protocoles OSPF et EIGRP sur Packet Tracer.',
-    tags: ['Cisco', 'VLAN', 'OSPF', 'Packet Tracer'],
-    date: '2024', status: 'done',
-    competences: ['C1', 'C5']
-  },
-  {
-    icon: '📡', title: 'Mise en place Active Directory',
-    context: 'ecole', category: 'Systèmes & Infrastructure',
-    desc: 'TP de déploiement d\'un domaine AD : création d\'OU, gestion des utilisateurs/groupes, stratégies GPO, DNS et DHCP intégrés.',
-    tags: ['Windows Server', 'AD DS', 'GPO', 'DNS'],
-    date: '2024', status: 'done',
-    competences: ['C1', 'C5']
-  },
-  {
-    icon: '🐧', title: 'Administration Linux',
-    context: 'ecole', category: 'Systèmes & Infrastructure',
-    desc: 'Cours et TP sur l\'administration de serveurs Debian/Ubuntu : gestion des services (Apache, Bind9, DHCP), scripting Bash, permissions et pare-feu.',
-    tags: ['Debian', 'Bash', 'Apache', 'iptables'],
-    date: '2024', status: 'done',
-    competences: ['C1', 'C5']
-  },
-  {
-    icon: '🛡️', title: 'Initiation Cybersécurité',
-    context: 'ecole', category: 'Cybersécurité',
-    desc: 'Module de sensibilisation à la cybersécurité : scan de ports avec Nmap, analyse de trames avec Wireshark, identification de vulnérabilités.',
-    tags: ['Nmap', 'Wireshark', 'Sécurité', 'Analyse'],
-    date: '2025', status: 'done',
-    competences: ['C1', 'C2', 'C6']
-  },
-  {
-    icon: '💾', title: 'Base de Données SQL',
-    context: 'ecole', category: 'Développement',
-    desc: 'Conception et manipulation de bases de données relationnelles : modélisation MCD/MLD, requêtes SQL avancées, jointures, vues et procédures stockées.',
-    tags: ['MySQL', 'SQL', 'MCD', 'PhpMyAdmin'],
-    date: '2024', status: 'done',
-    competences: ['C1', 'C5']
-  },
-  {
-    icon: '🐍', title: 'Programmation Python',
-    context: 'ecole', category: 'Développement',
-    desc: 'Cours de programmation Python : algorithmique, structures de données, scripts d\'automatisation, interaction avec fichiers et API.',
-    tags: ['Python 3', 'Algorithmique', 'Scripting'],
-    date: '2024-2025', status: 'done',
-    competences: ['C4', 'C6']
-  },
-  {
-    icon: '📋', title: 'Projet d\'Épreuve E5',
-    context: 'ecole', category: 'Projets BTS',
-    desc: 'Projet professionnel pour l\'épreuve E5 du BTS SIO : conception, réalisation et documentation d\'une solution d\'infrastructure réseau complète.',
-    tags: ['BTS SIO', 'E5', 'Documentation', 'Infrastructure'],
-    date: '2025', status: 'progress',
-    competences: ['C1', 'C4', 'C5']
-  },
-
-  // ─── 🏢 ENTREPRISE ───
-  {
-    icon: '🔧', title: 'Déploiement GLPI',
-    context: 'entreprise', category: 'Gestion de Parc',
-    desc: 'Installation et configuration de GLPI pour la gestion du parc informatique : inventaire automatisé via FusionInventory, gestion des tickets et suivi des actifs.',
-    tags: ['GLPI', 'FusionInventory', 'ITSM', 'Helpdesk'],
-    date: '2024', status: 'done',
-    competences: ['C1', 'C2', 'C5']
-  },
-  {
-    icon: '📡', title: 'Administration Active Directory',
-    context: 'entreprise', category: 'Infrastructure',
-    desc: 'Gestion quotidienne de l\'AD en production : création de comptes, gestion des droits, GPO de sécurité, scripts PowerShell d\'automatisation des tâches récurrentes.',
-    tags: ['AD', 'PowerShell', 'GPO', 'Production'],
-    date: '2024-2025', status: 'done',
-    competences: ['C1', 'C2', 'C5']
-  },
-  {
-    icon: '☁️', title: 'Infrastructure VMware',
-    context: 'entreprise', category: 'Virtualisation',
-    desc: 'Administration de l\'infrastructure VMware ESXi/vSphere : création et gestion de VMs, snapshots, surveillance des ressources, migration et maintenance.',
-    tags: ['VMware', 'ESXi', 'vSphere', 'VMs'],
-    date: '2024', status: 'done',
-    competences: ['C1', 'C5']
-  },
-  {
-    icon: '🎫', title: 'Support Utilisateurs N1/N2',
-    context: 'entreprise', category: 'Support & Helpdesk',
-    desc: 'Résolution de tickets de support de niveau 1 et 2 : diagnostic réseau, dépannage postes de travail, gestion des imprimantes, assistance à distance.',
-    tags: ['Helpdesk', 'Diagnostic', 'Support', 'Ticketing'],
-    date: '2024-2025', status: 'done',
-    competences: ['C2', 'C5']
-  },
-  {
-    icon: '🌐', title: 'Maintenance Réseau',
-    context: 'entreprise', category: 'Réseau',
-    desc: 'Participation à la maintenance de l\'infrastructure réseau : câblage, configuration switchs, diagnostic de pannes, surveillance avec outils de monitoring.',
-    tags: ['Réseau', 'Switch', 'Monitoring', 'Câblage'],
-    date: '2024-2025', status: 'done',
-    competences: ['C1', 'C2']
-  },
-  {
-    icon: '🔐', title: 'Durcissement Sécurité',
-    context: 'entreprise', category: 'Sécurité',
-    desc: 'Participation au renforcement de la sécurité du SI : mise à jour des politiques de mots de passe, audit des accès, configuration pare-feu, sensibilisation utilisateurs. Mise en place de VPN avec tunnels SSL et IPsec, ainsi que déploiement de l\'antivirus ESET sur le parc informatique.',
-    tags: ['Sécurité', 'Pare-feu', 'Audit', 'Hardening', 'VPN SSL', 'IPsec', 'ESET'],
-    date: '2025', status: 'progress',
-    competences: ['C1', 'C2', 'C5']
-  },
-
-  // ─── 🏠 PERSONNEL ───
-  {
-    icon: '🛡️', title: 'Tests de sécurité',
-    context: 'perso', category: 'Cybersécurité',
-    desc: 'Environnement de test personnel pour la pratique du pentest : machines vulnérables (HackTheBox, TryHackMe), outils Kali Linux. Utilisation de Windows Sandbox comme bac à sable isolé pour analyser des fichiers suspects et tester l\'exploitation de failles de sécurité en toute sécurité.',
-    tags: ['Kali Linux', 'HackTheBox', 'TryHackMe', 'Pentest', 'Windows Sandbox'],
-    date: '2025', status: 'done',
-    competences: ['C2', 'C6']
-  },
-  {
-    icon: '💻', title: 'Serveur personnel',
-    context: 'perso', category: 'Infrastructure',
-    desc: 'Mise en place d\'un serveur personnel pour apprendre et expérimenter : virtualisation avec Proxmox, déploiement de services essentiels (DHCP, Active Directory), serveur de fichiers (SRV APP) et serveur TSE pour l\'accès bureau à distance.',
-    tags: ['Proxmox', 'DHCP', 'Active Directory', 'TSE', 'Serveur de fichiers'],
-    date: '2024-2025', status: 'done',
-    competences: ['C1', 'C4', 'C5']
-  },
-  {
-    icon: '🌍', title: 'Portfolio interactif (ce site)',
-    context: 'perso', category: 'Présence en ligne',
-    desc: 'Conception et développement de ce portfolio web interactif simulant un environnement OS : HTML5, CSS3, JavaScript vanilla. Mise en ligne et référencement pour développer ma présence professionnelle en ligne.',
-    tags: ['HTML5', 'CSS3', 'JavaScript', 'Portfolio', 'Web'],
-    date: '2025-2026', status: 'done',
-    competences: ['C3', 'C4', 'C6']
-  },
-  {
-    icon: '📚', title: 'Veille technologique',
-    context: 'perso', category: 'Développement professionnel',
-    desc: 'Organisation d\'une veille technologique structurée : suivi de flux RSS (Feedly), forums spécialisés, newsletters cybersécurité, plateformes d\'autoformation (HackTheBox, TryHackMe), documentation technique et certifications.',
-    tags: ['Veille', 'RSS', 'Feedly', 'Autoformation', 'Certifications'],
-    date: '2024-2026', status: 'progress',
-    competences: ['C6']
-  }
-];
-
-function initProjets() {
-  const container = document.getElementById('projetsContent');
-  if (!container) return;
-  renderProjets('all');
-}
-
-function switchProjetTab(tabEl, filter) {
-  document.querySelectorAll('.projets-tab').forEach(t => t.classList.remove('active'));
-  tabEl.classList.add('active');
-  renderProjets(filter);
-}
-
-function renderProjets(filter) {
-  const container = document.getElementById('projetsContent');
-  if (!container) return;
-
-  const filtered = filter === 'all' ? projetsData : projetsData.filter(p => p.context === filter);
-
-  // Group by category
-  const groups = {};
-  filtered.forEach(p => {
-    if (!groups[p.category]) groups[p.category] = [];
-    groups[p.category].push(p);
-  });
-
-  // Update counts
-  const countAll = document.getElementById('countAll');
-  const countEcole = document.getElementById('countEcole');
-  const countEntreprise = document.getElementById('countEntreprise');
-  const countPerso = document.getElementById('countPerso');
-  if (countAll) countAll.textContent = projetsData.length;
-  if (countEcole) countEcole.textContent = projetsData.filter(p => p.context === 'ecole').length;
-  if (countEntreprise) countEntreprise.textContent = projetsData.filter(p => p.context === 'entreprise').length;
-  if (countPerso) countPerso.textContent = projetsData.filter(p => p.context === 'perso').length;
-
-  const contextLabels = { ecole: 'École', entreprise: 'Entreprise', perso: 'Personnel' };
-  const statusLabels = { done: 'Terminé', progress: 'En cours', planned: 'Planifié' };
-
-  let html = '';
-  for (const [cat, items] of Object.entries(groups)) {
-    html += `
-      <div class="projets-category">
-        <div class="projets-category-header">
-          <span class="projets-category-icon">📂</span>
-          <span class="projets-category-title">${cat}</span>
-          <span class="projets-category-count">${items.length} élément${items.length > 1 ? 's' : ''}</span>
-        </div>
-    `;
-    items.forEach(p => {
-      html += `
-        <div class="projet-card" onclick="toggleProjetDesc(this)">
-          <div class="projet-card-icon">${p.icon}</div>
-          <div class="projet-card-body">
-            <div class="projet-card-title">
-              ${p.title}
-              <span class="projet-card-context ${p.context}">${contextLabels[p.context]}</span>
-            </div>
-            <div class="projet-card-desc">${p.desc}</div>
-            <div class="projet-card-competences">
-              ${(p.competences || []).map(c => `<span class="projet-card-comp" title="${competencesE4[c]}">${c}</span>`).join('')}
-            </div>
-            <div class="projet-card-footer">
-              ${p.tags.map(t => `<span class="projet-card-tag">${t}</span>`).join('')}
-              <span class="projet-card-date">📅 ${p.date}</span>
-            </div>
-          </div>
-          <div class="projet-card-status ${p.status}" title="${statusLabels[p.status]}"></div>
-        </div>
-      `;
-    });
-    html += `</div>`;
-  }
-
-  container.innerHTML = html;
-}
-
-function toggleProjetDesc(card) {
-  const desc = card.querySelector('.projet-card-desc');
-  desc.style.display = desc.style.display === 'none' ? '' : 'none';
 }
 
 // ============================
@@ -8466,7 +7996,6 @@ function openWindow(id) {
   if (id === 'accueil') initTypingEffect();
   if (id === 'apropos') initAproposEditor();
   if (id === 'terminal') initTerminal();
-  if (id === 'projets') initProjets();
   if (id === 'scolarite') initScolarite();
   if (id === 'monparcours') initMonParcours();
   if (id === 'cv') initCvViewer();
@@ -8579,7 +8108,6 @@ function updateTaskbar() {
         'Accueil': 'accueil',
         'À Propos': 'apropos',
         'Réalisations': 'realisations',
-        'Projets': 'projets',
         'Scolarité': 'scolarite',
         'Mon parcours': 'monparcours',
         'Contact': 'contact',
@@ -9702,9 +9230,8 @@ function processCommand(cmd) {
 <div><span class="t-cmd">help</span>      <span class="t-result">— Affiche cette aide</span></div>
 <div><span class="t-cmd">about</span>     <span class="t-result">— À propos de moi</span></div>
 <div><span class="t-cmd">skills</span>    <span class="t-result">— Mes compétences</span></div>
-<div><span class="t-cmd">projects</span>  <span class="t-result">— Mes projets</span></div>
 <div><span class="t-cmd">contact</span>   <span class="t-result">— Mes coordonnées</span></div>
-<div><span class="t-cmd">open</span>      <span class="t-result">— Ouvrir une fenêtre (ex: open projets)</span></div>
+<div><span class="t-cmd">open</span>      <span class="t-result">— Ouvrir une fenêtre (ex: open scolarite)</span></div>
 <div><span class="t-cmd">wallpaper</span> <span class="t-result">— Changer le fond d'écran</span></div>
 <div><span class="t-cmd">theme</span>     <span class="t-result">— Changer la couleur d'accent</span></div>
 <div><span class="t-cmd">ping</span>      <span class="t-result">— Ping simulation</span></div>
@@ -9735,14 +9262,6 @@ function processCommand(cmd) {
 <div class="t-result">🐍 Python         ███░░░░░░░ 35%</div>
 <div class="t-result">🔧 GLPI/ITSM      ███████░░░ 75%</div>
 <div class="t-result">☁️ Virtualisation  ███████░░░ 72%</div>`;
-    },
-    projects: () => {
-      return `<div class="t-result">📡 Active Directory — Infrastructure</div>
-<div class="t-result">🌐 Infrastructure Cisco — Réseau</div>
-<div class="t-result">🔧 GLPI — Gestion de parc</div>
-<div class="t-result">🐧 Serveur Linux — Système</div>
-<div class="t-result">🛡️ Audit Sécurité — Cybersécurité</div>
-<div class="t-result">☁️ Virtualisation VMware — Infrastructure</div>`;
     },
     contact: () => {
       return `<div class="t-result">📧 aymen.louraghi38@gmail.com</div>
@@ -9829,7 +9348,7 @@ function processCommand(cmd) {
   else if (cmd.startsWith('open ')) {
     const target = cmd.split(' ')[1];
     // BTS: Liste blanche des fenêtres autorisées depuis la commande terminal "open ...".
-    const validWindows = ['accueil', 'apropos', 'realisations', 'projets', 'scolarite', 'contact', 'terminal'];
+    const validWindows = ['accueil', 'apropos', 'realisations', 'scolarite', 'contact', 'terminal'];
     if (validWindows.includes(target)) {
       output.innerHTML += `<div class="t-result">Ouverture de ${target}...</div>`;
       setTimeout(() => openWindow(target), 300);
