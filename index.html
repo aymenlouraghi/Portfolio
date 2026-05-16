@@ -2793,6 +2793,10 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   background: rgba(0,0,0,0.2);
   border-bottom: 1px solid var(--border);
   display:flex; align-items:center; justify-content:space-between;
+  gap: 12px;
+}
+.synthese-actions {
+  display:flex; align-items:center; gap:6px; flex-wrap:wrap;
 }
 .synthese-header h2 {
   font-size:0.95rem; font-weight:600; color: var(--text-bright);
@@ -2856,6 +2860,13 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
   padding:14px 18px;
   background: rgba(0,0,0,0.2);
   border-bottom: 1px solid var(--border);
+  display:flex; flex-direction:column; gap:8px;
+}
+.veille-header-row {
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+}
+.veille-actions {
+  display:flex; align-items:center; gap:6px; flex-wrap:wrap;
 }
 .veille-header h2 {
   font-size:0.95rem; font-weight:600; color: var(--text-bright);
@@ -6515,6 +6526,10 @@ function getWindowContent(id) {
               <h2>📊 Tableau de synthèse — Épreuve E4</h2>
               <div class="synthese-header-subtitle">Bloc « Support et mise à disposition de services informatiques »</div>
             </div>
+            <div class="synthese-actions">
+              <button class="doc-viewer-btn" onclick="openDocViewer('docs/Synth%C3%A8se%20E4/BTS%20SIO%20Fiche%20r%C3%A9alisation.xlsx', '📊', 'BTS SIO Fiche réalisation.xlsx')">📂 Ouvrir Excel</button>
+              <button class="doc-viewer-btn primary" onclick="downloadDoc('docs/Synth%C3%A8se%20E4/BTS%20SIO%20Fiche%20r%C3%A9alisation.xlsx', 'BTS SIO Fiche réalisation.xlsx')">⬇️ Télécharger</button>
+            </div>
           </div>
           <div class="synthese-body">
             <table class="synthese-table" id="syntheseTable">
@@ -6548,8 +6563,16 @@ function getWindowContent(id) {
       content: `
         <div class="veille-container">
           <div class="veille-header">
-            <h2>📡 Veille technologique & Développement professionnel</h2>
-            <p>Compétence E4-C6 : Organiser son développement professionnel</p>
+            <div class="veille-header-row">
+              <div>
+                <h2>📡 Veille technologique & Développement professionnel</h2>
+                <p>Compétence E4-C6 : Organiser son développement professionnel</p>
+              </div>
+              <div class="veille-actions">
+                <button class="doc-viewer-btn" onclick="openDocViewer('docs/Veille/TP%20Veille%20strat%C3%A9gique.odt', '📝', 'TP Veille stratégique.odt')">📂 Ouvrir le document</button>
+                <button class="doc-viewer-btn primary" onclick="downloadDoc('docs/Veille/TP%20Veille%20strat%C3%A9gique.odt', 'TP Veille stratégique.odt')">⬇️ Télécharger</button>
+              </div>
+            </div>
           </div>
           <div class="veille-body">
             <div class="veille-section">
@@ -7038,7 +7061,7 @@ function openDocumentViewer(fileItem) {
   const icon = fileItem.icon || '📄';
   const extension = (fileName.split('.').pop() || '').toLowerCase();
   const isOdt = extension === 'odt';
-  const isOfficeDoc = ['doc', 'docx'].includes(extension);
+  const isOfficeDoc = ['doc', 'docx', 'xls', 'xlsx'].includes(extension);
   const isPdf = extension === 'pdf';
   const iframeSrc = isOfficeDoc
     ? `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(new URL(fileUrl, window.location.href).href)}`
@@ -7116,7 +7139,14 @@ function openDocumentInNewTab(url, name = '') {
     absoluteUrl = url;
   }
 
-  const tab = window.open(absoluteUrl, '_blank');
+  const rawName = name || (url.split('/').pop() || '');
+  const extension = (rawName.split('.').pop() || '').toLowerCase();
+  const officeExtensions = ['doc', 'docx', 'xls', 'xlsx'];
+  const finalUrl = officeExtensions.includes(extension)
+    ? `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(absoluteUrl)}`
+    : absoluteUrl;
+
+  const tab = window.open(finalUrl, '_blank');
   if (!tab) {
     showNotification('⚠️ Pop-up bloquée', 'Autorise les pop-ups pour ouvrir le document dans un nouvel onglet.');
   }
