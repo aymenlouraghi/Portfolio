@@ -2807,6 +2807,11 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
 .synthese-body {
   flex:1; overflow-y:auto; padding:0;
 }
+.synthese-doc-viewer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 .synthese-table {
   width:100%; border-collapse:collapse; font-size:0.75rem;
 }
@@ -2878,6 +2883,12 @@ button:focus-visible, input:focus-visible { outline-offset: 0; }
 .veille-body {
   flex:1; overflow-y:auto; padding:1rem;
   display:flex; flex-direction:column; gap:1rem;
+}
+.veille-doc-preview {
+  margin-bottom: 0.2rem;
+}
+.veille-doc-preview .doc-viewer {
+  height: 240px;
 }
 .veille-section {
   background: rgba(255,255,255,0.02);
@@ -6532,18 +6543,22 @@ function getWindowContent(id) {
             </div>
           </div>
           <div class="synthese-body">
-            <table class="synthese-table" id="syntheseTable">
-              <thead>
-                <tr>
-                  <th>Réalisation</th>
-                  <th>Contexte</th>
-                  <th>Compétences E4</th>
-                  <th>Période</th>
-                  <th>État</th>
-                </tr>
-              </thead>
-              <tbody id="syntheseBody"></tbody>
-            </table>
+            <div class="doc-viewer synthese-doc-viewer">
+              <div class="doc-viewer-toolbar">
+                <span class="doc-viewer-title">📊 BTS SIO Fiche réalisation.xlsx</span>
+                <div class="doc-viewer-actions">
+                  <button class="doc-viewer-btn" onclick="openDocumentInNewTab('docs/Synth%C3%A8se%20E4/BTS%20SIO%20Fiche%20r%C3%A9alisation.xlsx', 'BTS SIO Fiche réalisation.xlsx')">🔗 Nouvel onglet</button>
+                  <button class="doc-viewer-btn primary" onclick="downloadDoc('docs/Synth%C3%A8se%20E4/BTS%20SIO%20Fiche%20r%C3%A9alisation.xlsx', 'BTS SIO Fiche réalisation.xlsx')">⬇️ Télécharger</button>
+                </div>
+              </div>
+              <iframe class="doc-viewer-frame" id="syntheseExcelFrame" title="BTS SIO Fiche réalisation.xlsx"></iframe>
+              <div class="doc-viewer-fallback" id="syntheseExcelFallback" style="display:none;">
+                <div class="doc-viewer-fallback-icon">📊</div>
+                <div class="doc-viewer-fallback-title">BTS SIO Fiche réalisation.xlsx</div>
+                <div class="doc-viewer-fallback-text">Impossible d'afficher l'aperçu Excel ici.<br>Utilisez l'ouverture dans un nouvel onglet ou téléchargez le fichier.</div>
+                <button class="doc-viewer-btn primary" onclick="openDocumentInNewTab('docs/Synth%C3%A8se%20E4/BTS%20SIO%20Fiche%20r%C3%A9alisation.xlsx', 'BTS SIO Fiche réalisation.xlsx')" style="margin-top:0.5rem;">🔗 Ouvrir dans un nouvel onglet</button>
+              </div>
+            </div>
           </div>
           <div class="synthese-legend">
             <div class="synthese-legend-item"><span class="synthese-status-dot" style="background:var(--accent-green)"></span> Terminé</div>
@@ -6575,6 +6590,20 @@ function getWindowContent(id) {
             </div>
           </div>
           <div class="veille-body">
+            <div class="veille-doc-preview">
+              <div class="doc-viewer">
+                <div class="doc-viewer-toolbar">
+                  <span class="doc-viewer-title">📝 TP Veille stratégique.odt</span>
+                  <div class="doc-viewer-actions">
+                    <button class="doc-viewer-btn" onclick="openDocumentInNewTab('docs/Veille/TP%20Veille%20strat%C3%A9gique.odt', 'TP Veille stratégique.odt')">🔗 Nouvel onglet</button>
+                    <button class="doc-viewer-btn primary" onclick="downloadDoc('docs/Veille/TP%20Veille%20strat%C3%A9gique.odt', 'TP Veille stratégique.odt')">⬇️ Télécharger</button>
+                  </div>
+                </div>
+                <div class="doc-viewer-frame odt-preview-frame" id="veilleOdtPreview">
+                  <div class="odt-preview-loading">Chargement de l'aperçu du document...</div>
+                </div>
+              </div>
+            </div>
             <div class="veille-section">
               <div class="veille-section-title">🔍 Outils de veille</div>
               <div class="veille-item"><strong>Feedly</strong> — Agrégateur RSS pour centraliser les flux d'actualités tech, cybersécurité et réseau.</div>
@@ -7063,15 +7092,18 @@ function openDocumentViewer(fileItem) {
   const isOdt = extension === 'odt';
   const isOfficeDoc = ['doc', 'docx', 'xls', 'xlsx'].includes(extension);
   const isPdf = extension === 'pdf';
-  const iframeSrc = isOfficeDoc
+  const canUseOfficeViewer = isOfficeDoc && window.location.protocol !== 'file:';
+  const iframeSrc = canUseOfficeViewer
     ? `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(new URL(fileUrl, window.location.href).href)}`
     : fileUrl;
   const viewerTitle = isPdf ? 'Lecteur PDF' : 'Lecteur de document';
   const odtPreviewId = `odt-preview-${winId}`;
+  const iframeDisplay = (!canUseOfficeViewer && isOfficeDoc) ? "style=\"display:none;\"" : '';
+  const fallbackDisplay = (!canUseOfficeViewer && isOfficeDoc) ? "style=\"display:flex;\"" : "style=\"display:none;\"";
   const viewerContent = isOdt
     ? `<div class="doc-viewer-frame odt-preview-frame" id="${odtPreviewId}"><div class="odt-preview-loading">Chargement de l'aperçu du document...</div></div>`
-    : `<iframe class="doc-viewer-frame" src="${iframeSrc}" title="${fileName}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"></iframe>
-        <div class="doc-viewer-fallback" style="display:none;">
+    : `<iframe class="doc-viewer-frame" src="${iframeSrc}" title="${fileName}" ${iframeDisplay} onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"></iframe>
+        <div class="doc-viewer-fallback" ${fallbackDisplay}>
           <div class="doc-viewer-fallback-icon">📄</div>
           <div class="doc-viewer-fallback-title">${fileName}</div>
           <div class="doc-viewer-fallback-text">Le document n'a pas pu être chargé dans l'aperçu intégré.<br>Utilisez <strong>Nouvel onglet</strong> ou <strong>Télécharger</strong>.</div>
@@ -7142,7 +7174,11 @@ function openDocumentInNewTab(url, name = '') {
   const rawName = name || (url.split('/').pop() || '');
   const extension = (rawName.split('.').pop() || '').toLowerCase();
   const officeExtensions = ['doc', 'docx', 'xls', 'xlsx'];
-  const finalUrl = officeExtensions.includes(extension)
+  const useOfficeViewer = officeExtensions.includes(extension) && window.location.protocol !== 'file:';
+  if (officeExtensions.includes(extension) && window.location.protocol === 'file:') {
+    showNotification('⚠️ Aperçu Office indisponible', 'Lance le portfolio via un serveur local ou en ligne pour prévisualiser les fichiers Office.');
+  }
+  const finalUrl = useOfficeViewer
     ? `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(absoluteUrl)}`
     : absoluteUrl;
 
@@ -7979,6 +8015,16 @@ function initCvViewer() {
 // TABLEAU DE SYNTHÈSE E4
 // ============================
 function initSynthese() {
+  const excelFrame = document.getElementById('syntheseExcelFrame');
+  const excelFallback = document.getElementById('syntheseExcelFallback');
+  if (excelFrame && excelFallback) {
+    initOfficeViewerFrame(
+      excelFrame,
+      excelFallback,
+      'docs/Synth%C3%A8se%20E4/BTS%20SIO%20Fiche%20r%C3%A9alisation.xlsx'
+    );
+    return;
+  }
   // BTS: Cette fonction construit automatiquement le tableau "Synthèse E4" depuis projetsData.
   const tbody = document.getElementById('syntheseBody');
   if (!tbody) return;
@@ -7997,6 +8043,44 @@ function initSynthese() {
     </tr>`;
   });
   tbody.innerHTML = html;
+}
+
+function initOfficeViewerFrame(iframe, fallback, fileUrl) {
+  if (!iframe || !fallback) return;
+  if (window.location.protocol === 'file:') {
+    iframe.style.display = 'none';
+    fallback.style.display = 'flex';
+    return;
+  }
+  let absoluteUrl;
+  try {
+    absoluteUrl = new URL(fileUrl, window.location.href).href;
+  } catch {
+    absoluteUrl = fileUrl;
+  }
+  iframe.src = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(absoluteUrl)}`;
+  iframe.addEventListener('error', function() {
+    iframe.style.display = 'none';
+    fallback.style.display = 'flex';
+  });
+  setTimeout(function() {
+    try {
+      if (iframe.clientHeight < 10) {
+        iframe.style.display = 'none';
+        fallback.style.display = 'flex';
+      }
+    } catch (e) { /* cross-origin, Office viewer likely loaded fine */ }
+  }, 3000);
+}
+
+function initVeilleDocPreview() {
+  const container = document.getElementById('veilleOdtPreview');
+  if (!container) return;
+  if (window.location.protocol === 'file:') {
+    container.innerHTML = '<div class="odt-preview-error">Aperçu indisponible en mode fichier local.<br>Utilisez <strong>Nouvel onglet</strong> ou <strong>Télécharger</strong>.</div>';
+    return;
+  }
+  renderOdtPreview('docs/Veille/TP%20Veille%20strat%C3%A9gique.odt', 'veilleOdtPreview');
 }
 
 // ============================
@@ -8409,6 +8493,7 @@ function openWindow(id) {
   if (id === 'monparcours') initMonParcours();
   if (id === 'cv') initCvViewer();
   if (id === 'synthese') initSynthese();
+  if (id === 'veille') initVeilleDocPreview();
 
   // Click to focus
   win.addEventListener('mousedown', () => focusWindow(id));
